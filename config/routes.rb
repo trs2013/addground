@@ -114,7 +114,6 @@ Feedbin::Application.routes.draw do
       get :search
       get :recently_read, to: 'recently_read_entries#index'
       post :mark_all_as_read
-      post :mark_direction_as_read
     end
   end
 

@@ -98,6 +98,33 @@ class _Counts
   isStarred: (entryId) ->
     _.contains(@counts.starred.all, entryId)
 
+  getUnreadIds: (group, groupId) ->
+    ids = @counts['unread'][group]
+
+    if groupId
+      if groupId of ids
+        ids = ids[groupId]
+      else
+        ids = []
+
+    ids.slice()
+
+  bulkRemoveUnread: (entryIds) ->
+    $.each entryIds, (index, entryId) =>
+      index = @counts.unread.all.indexOf(entryId);
+      if index > -1
+        @counts.unread.all.splice(index, 1)
+        entry = @collections.unread[index]
+        feedId = @feedId(entry)
+        @collections.unread.splice(index, 1)
+
+      @removeFromCollection('unread', 'byFeed', entryId, feedId)
+
+      if (feedId of @tagMap)
+        tags = @tagMap[feedId]
+        for tagId in tags
+          @removeFromCollection('unread', 'byTag', entryId, tagId)
+
 class Counts
   instance = null
   @get: (tagMap, sortOrder, unreadEntries, starredEntries) ->

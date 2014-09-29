@@ -207,17 +207,6 @@ $.extend feedbin,
     elements.css
       height: height
 
-  disableMarkRead: () ->
-    feedbin.markReadData = {}
-    $('[data-behavior~=mark_all_as_read]').attr('disabled', 'disabled')
-
-  markRead: () ->
-    $('.entries li').addClass('read')
-    feedbin.markReadData.ids = $('.entries li').map(() ->
-      $(@).data('entry-id')
-    ).get().join()
-    $.post feedbin.data.mark_as_read_path, feedbin.markReadData
-
   checkPushPermission: (permissionData) ->
     if (permissionData.permission == 'default')
       $('body').removeClass('push-on')
@@ -397,8 +386,6 @@ $.extend feedbin,
 
   feedXhr: null
 
-  markReadData: {}
-
   closeSubcription: false
 
   player: null
@@ -411,6 +398,7 @@ $.extend feedbin,
     startup: ->
       new feedbin.CountsBehavior()
       new feedbin.Preload()
+      new feedbin.MarkRead()
 
     hasTouch: ->
       if ('ontouchstart' in document)
@@ -425,25 +413,6 @@ $.extend feedbin,
         query = "#{query} sort:#{sortOption}"
         searchField.val(query)
         searchField.parents('form').submit()
-
-    markRead: ->
-      $(document).on 'click', '[data-mark-read]', ->
-        feedbin.markReadData = $(@).data('mark-read')
-        $('[data-behavior~=mark_all_as_read]').removeAttr('disabled')
-        return
-
-      $(document).on 'click', '[data-behavior~=mark_all_as_read]', ->
-        unless $(@).attr('disabled')
-          $('.entries li').map ->
-            entry_id = $(@).data('entry-id') * 1
-
-          if feedbin.data.mark_as_read_confirmation
-            result = confirm(feedbin.markReadData.message)
-            if result
-              feedbin.markRead()
-          else
-            feedbin.markRead()
-        return
 
     selectable: ->
       $(document).on 'click', '[data-behavior~=selectable]', ->
@@ -857,24 +826,6 @@ $.extend feedbin,
       $(document).on 'click', '[data-behavior~=show_entry_content]', (event) ->
         unless $(event.target).is('[data-behavior~=show_entry_actions]')
           $('.entries li').removeClass('show-actions')
-        return
-
-    markDirectionAsRead: ->
-      $(document).on 'click', '[data-behavior~=mark_below_read], [data-behavior~=mark_above_read]', (event) ->
-        data = feedbin.markReadData
-        if data
-          data['ids'] = $(@).parents('li').prevAll().map(() ->
-            $(@).data('entry-id')
-          ).get().join()
-
-          if $(@).is('[data-behavior~=mark_below_read]')
-            $(@).parents('li').nextAll().addClass('read')
-            data['direction'] = 'below'
-          else
-            $(@).parents('li').prevAll().addClass('read')
-            data['direction'] = 'above'
-
-        $.post feedbin.data.mark_direction_as_read_entries, data
         return
 
     formProcessing: ->

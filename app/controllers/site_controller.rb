@@ -31,9 +31,8 @@ class SiteController < ApplicationController
         precache_images: (@user.precache_images == '1'),
         auto_update_path: auto_update_feeds_path,
         font_sizes: Feedbin::Application.config.font_sizes,
-        mark_as_read_path: mark_all_as_read_entries_path,
+        mark_as_read_path: mark_all_as_read_entries_path(format: :json),
         mark_as_read_confirmation: (@user.mark_as_read_confirmation == '1'),
-        mark_direction_as_read_entries: mark_direction_as_read_entries_path,
         entry_sort: @user.entry_sort
       }
 
