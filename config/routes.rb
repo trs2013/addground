@@ -110,6 +110,7 @@ Feedbin::Application.routes.draw do
       get :starred
       get :unread
       get :preload
+      get :preload_summaries
       get :search
       get :recently_read, to: 'recently_read_entries#index'
       post :mark_all_as_read

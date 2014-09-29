@@ -24,6 +24,7 @@ class SiteController < ApplicationController
         tags_path: tags_path(format: :json),
         user_titles: user_titles,
         preload_entries_path: preload_entries_path(format: :json),
+        preload_summaries_entries_path: preload_summaries_entries_path(format: :json),
         sticky_readability: (@user.sticky_view_inline == '1'),
         readability_settings: readability_settings,
         show_unread_count:  (@user.show_unread_count == '1'),

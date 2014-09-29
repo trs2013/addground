@@ -163,6 +163,16 @@ class EntriesController < ApplicationController
     end
   end
 
+  def preload_summaries
+    @user = current_user
+    ids = params[:ids].split(',').map {|i| i.to_i }
+    entries = Entry.where(id: ids).includes(:feed)
+    entries = entries.each_with_object({}) do |entry, hash|
+      hash[entry.id] = render_to_string(partial: "entries/entry", formats: [:html], locals: {entry: entry})
+    end
+    render json: entries.to_json
+  end
+
   def mark_as_read
     @user = current_user
     UnreadEntry.where(user: @user, entry_id: params[:id]).delete_all
