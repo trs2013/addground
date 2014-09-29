@@ -408,6 +408,10 @@ $.extend feedbin,
 $.extend feedbin,
   init:
 
+    startup: ->
+      new feedbin.CountsBehavior()
+      new feedbin.Preload()
+
     hasTouch: ->
       if ('ontouchstart' in document)
         $('body').addClass('touch')

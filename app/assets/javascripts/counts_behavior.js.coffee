@@ -17,7 +17,7 @@ feedbin.updateTitle = () ->
   docTitle.text(title) unless docTitle.text() is title
 
 feedbin.applyCounts = (useHideQueue) ->
-  $('[data-behavior~=needs_count]').each (index, countContainer) =>
+  $('[data-behavior~=countable]').each (index, countContainer) =>
     group = $(countContainer).data('count-group')
     groupId = $(countContainer).data('count-group-id')
 
@@ -58,9 +58,6 @@ feedbin.applyCounts = (useHideQueue) ->
           container.addClass('zero-count')
 
   feedbin.updateTitle()
-
-jQuery ->
-  new feedbin.CountsBehavior()
 
 class feedbin.CountsBehavior
   constructor: ->
