@@ -17,9 +17,10 @@ feedbin.updateTitle = () ->
   docTitle.text(title) unless docTitle.text() is title
 
 feedbin.applyCounts = (useHideQueue) ->
-  $('[data-behavior~=countable]').each (index, countContainer) =>
-    group = $(countContainer).data('count-group')
-    groupId = $(countContainer).data('count-group-id')
+  $('[data-behavior~=countable]').each (index, parentContainer) =>
+    countContainer = $(parentContainer).find('.count')
+    group = $(parentContainer).data('count-group')
+    groupId = $(parentContainer).data('count-group-id')
 
     collection = 'unread'
     if feedbin.data.viewMode == 'view_starred'
@@ -42,7 +43,7 @@ feedbin.applyCounts = (useHideQueue) ->
       $(countContainer).removeClass('hide')
 
     if groupId
-      container = $(countContainer).parents('li').first()
+      container = $(parentContainer).parents('li').first()
       if useHideQueue
         feedId = $(container).data('feed-id')
         if count == 0 && countWas > 0

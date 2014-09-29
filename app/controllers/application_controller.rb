@@ -39,32 +39,29 @@ class ApplicationController < ActionController::Base
     collections << {
       title: 'Unread',
       path: unread_entries_path,
-      count_data: {behavior: 'countable', count_group: 'all'},
       id: 'collection_unread',
       favicon_class: 'favicon-unread',
       parent_class: 'collection-unread',
       parent_data: { behavior: 'all_unread', feed_id: 'collection_unread', count_type: 'unread' },
-      data: { behavior: 'selectable show_entries open_item feed_link', mark_read: {type: 'unread', message: 'Mark all items as read?'}.to_json }
+      data: { behavior: 'selectable show_entries open_item feed_link countable', count_group: 'all', mark_read: {type: 'unread', message: 'Mark all items as read?'}.to_json }
     }
     collections << {
       title: 'All',
       path: entries_path,
-      count_data: {behavior: 'countable', count_group: 'all'},
       id: 'collection_all',
       favicon_class: 'favicon-all',
       parent_class: 'collection-all',
       parent_data: { behavior: 'all_unread', feed_id: 'collection_all', count_type: 'unread' },
-      data: { behavior: 'selectable show_entries open_item feed_link', mark_read: {type: 'all', message: 'Mark all items as read?'}.to_json }
+      data: { behavior: 'selectable show_entries open_item feed_link countable', count_group: 'all', mark_read: {type: 'all', message: 'Mark all items as read?'}.to_json }
     }
     collections << {
       title: 'Starred',
       path: starred_entries_path,
-      count_data: {behavior: 'countable', count_group: 'all'},
       id: 'collection_starred',
       favicon_class: 'favicon-star',
       parent_class: 'collection-starred',
       parent_data: { behavior: 'starred', feed_id: 'collection_starred', count_type: 'starred' },
-      data: { behavior: 'selectable show_entries open_item feed_link', mark_read: {type: 'starred', message: 'Mark starred items as read?'}.to_json }
+      data: { behavior: 'selectable show_entries open_item feed_link countable', count_group: 'all', mark_read: {type: 'starred', message: 'Mark starred items as read?'}.to_json }
     }
     collections << {
       title: 'Recently Read',
