@@ -1229,6 +1229,13 @@ CREATE INDEX index_import_items_on_import_id ON import_items USING btree (import
 
 
 --
+-- Name: index_imports_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_imports_on_user_id ON imports USING btree (user_id);
+
+
+--
 -- Name: index_recently_read_entries_on_created_at; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1745,4 +1752,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141202203934');
 INSERT INTO schema_migrations (version) VALUES ('20141208231955');
 
 INSERT INTO schema_migrations (version) VALUES ('20141215195928');
+
+INSERT INTO schema_migrations (version) VALUES ('20141215231257');
 
