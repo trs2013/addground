@@ -48,4 +48,15 @@
 
   </div>
 
+  <div class="description-inset">
+      <h3>Import Status</h3>
+      <ul>
+          <% @imports.each do |import| %>
+             <li>
+                 <%= link_to import.created_at.to_s(:date), import_path(import) %>
+             </li>
+          <% end %>
+      </ul>
+  </div>
+
 </div>

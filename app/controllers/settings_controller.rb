@@ -72,6 +72,7 @@ class SettingsController < ApplicationController
     @user = current_user
     @uploader = Import.new.upload
     @uploader.success_action_redirect = settings_import_export_url
+    @imports = @user.imports
 
     if params[:key]
       @import = Import.new(key: params[:key], user: @user)

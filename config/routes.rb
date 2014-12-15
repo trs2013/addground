@@ -50,7 +50,7 @@ Feedbin::Application.routes.draw do
 
   resources :tags,           only: [:index, :show, :update, :destroy]
   resources :billing_events, only: [:show]
-  resources :imports
+  resources :imports,        only: [:create, :show]
   resources :sessions
   resources :password_resets
   resources :sharing_services, path: 'settings/sharing', only: [:index, :create, :update, :destroy]
