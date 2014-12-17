@@ -63,7 +63,6 @@ gem 'honeybadger'
 gem 'addressable', require: 'addressable/uri'
 gem 'librato-rails'
 gem 'foreman', '= 0.63.0'
-gem 'yajl-ruby', require: nil
 gem 'readability_parser'
 gem 'lograge'
 gem 'grocer'
