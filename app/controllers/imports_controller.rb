@@ -21,7 +21,12 @@ class ImportsController < ApplicationController
     redirect_to settings_import_export_url
   end
 
+  def show
+    @user = current_user
+    @import = @user.imports.find(params[:id])
+    @import_items = @import.import_items
 
+  end
 
   private
 
