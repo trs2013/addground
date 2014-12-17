@@ -354,7 +354,8 @@ CREATE TABLE import_items (
     details text,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    item_type character varying(255)
+    item_type character varying(255),
+    status integer DEFAULT 0
 );
 
 
@@ -1754,4 +1755,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141208231955');
 INSERT INTO schema_migrations (version) VALUES ('20141215195928');
 
 INSERT INTO schema_migrations (version) VALUES ('20141215231257');
+
+INSERT INTO schema_migrations (version) VALUES ('20141217202420');
 
