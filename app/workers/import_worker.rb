@@ -4,8 +4,11 @@ class ImportWorker
 
   def perform(id)
     import = Import.find(id)
-    extension = import.upload.file.extension.downcase
-    import.build_opml_import_job
+    import.process do
+      feeds = import.parse_opml
+      import.create_tags(feeds)
+      import.build_import_items(feeds)
+    end
   end
 
 end

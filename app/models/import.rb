@@ -1,5 +1,7 @@
 class Import < ActiveRecord::Base
 
+  include Processable
+
   mount_uploader :upload, ImportUploader
   enum status: { processing: 0, success: 1, failed: 2 }
 
@@ -12,11 +14,9 @@ class Import < ActiveRecord::Base
     ImportWorker.perform_async(id)
   end
 
-  def build_opml_import_job
-    feeds = parse_opml
-    create_tags(feeds)
+  def build_import_items(feeds)
     feeds.each do |feed|
-      self.import_items << ImportItem.new(details: feed, item_type: 'feed')
+      self.import_items.create!(details: feed, item_type: 'feed')
     end
   end
 
