@@ -11,6 +11,11 @@ class FeedbinUtils
     end
   end
 
+  def self.update_url_cache(url_hash, entry_id)
+    key = redis_url_key(url_hash)
+    $redis.hset(key, url_hash, entry_id)
+  end
+
   def self.public_id_key(public_id)
     "entry:public_ids:%s" % public_id[0..4]
   end
@@ -25,5 +30,9 @@ class FeedbinUtils
 
   def self.redis_user_entries_published_key(user_id)
     "user:%d:sorted_entry_ids:published:v2" % user_id
+  end
+
+  def self.redis_url_key(url_hash)
+    "url:%s" % url_hash[0..4]
   end
 end

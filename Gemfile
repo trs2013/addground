@@ -75,6 +75,8 @@ gem 'httparty'
 gem 'oauth'
 gem 'evernote_oauth'
 gem 'rmagick', require: false
+gem 'curb'
+gem 'postrank-uri'
 
 # Sidekiq
 gem 'sidekiq'

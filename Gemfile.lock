@@ -270,6 +270,11 @@ GEM
       nokogiri
     oauth (0.4.7)
     pg (0.17.1)
+    postrank-uri (1.0.18)
+      addressable (~> 2.3.0)
+      nokogiri (~> 1.6.1)
+      public_suffix (~> 1.1.3)
+    public_suffix (1.1.3)
     quiet_assets (1.0.3)
       railties (>= 3.1, < 5.0)
     rack (1.5.2)
@@ -412,6 +417,7 @@ DEPENDENCIES
   codeclimate-test-reporter
   coffee-rails
   connection_pool
+  curb
   dalli
   dotenv-rails
   evernote_oauth
@@ -435,6 +441,7 @@ DEPENDENCIES
   oauth
   opml_saw!
   pg
+  postrank-uri
   quiet_assets
   rails
   readability_parser
