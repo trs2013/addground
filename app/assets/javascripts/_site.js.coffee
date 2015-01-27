@@ -165,6 +165,9 @@ $.extend feedbin,
     target = $('[data-behavior~=entry_content_wrap]')[0]
     result = twttr.widgets.load(target)
 
+  formatInstagram: ->
+    instgrm.Embeds.process()
+
   formatEntryContent: (entryId, resetScroll=true, readability=true) ->
     feedbin.applyStarred(entryId)
     if resetScroll
@@ -180,6 +183,7 @@ $.extend feedbin,
       feedbin.applyUserTitles()
       feedbin.fitVids()
       feedbin.formatTweets()
+      feedbin.formatInstagram()
     catch error
       if 'console' of window
         console.log error
@@ -441,6 +445,8 @@ $.extend feedbin,
 
   recentlyReadTimer: null
 
+  selectedFeed: null
+
 $.extend feedbin,
   init:
 
@@ -453,9 +459,10 @@ $.extend feedbin,
 
     renameFeed: ->
       $(document).on 'dblclick', '[data-behavior~=renamable]', (event) ->
-        feedTitle = $(@).find('.rename-feed-input')
-        feedTitle.removeClass('disabled')
-        feedTitle.select()
+        unless $(event.target).is('.feed-action-button')
+          feedTitle = $(@).find('.rename-feed-input')
+          feedTitle.removeClass('disabled')
+          feedTitle.select()
 
       $(document).on 'blur', '.rename-feed-input', (event) ->
         field = $(@)

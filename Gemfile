@@ -12,10 +12,11 @@ group :development do
   gem 'dotenv-rails'
   gem 'silencer'
   gem 'spring'
+  gem 'benchmark-ips'
 end
 
 group :development, :test do
-  gem 'rspec-rails', '~> 3.0.0'
+  gem 'rspec-rails', '~> 3.1'
   gem 'factory_girl_rails'
   gem 'faker'
 end
@@ -31,7 +32,7 @@ end
 gem 'pg'
 gem 'unicorn'
 
-gem 'feedjira',              github: 'feedbin/feedjira',            ref: '154c523'
+gem 'feedjira',              github: 'feedbin/feedjira',            ref: '6912c43'
 gem 'opml_saw',              github: 'feedbin/opml_saw',            ref: '61d8c2d'
 gem 'html-pipeline',         github: 'benubois/html-pipeline',      ref: 'd71de03'
 gem 'grocer-pushpackager',   github: 'feedbin/grocer-pushpackager', ref: 'e190796', require: 'grocer/pushpackager'
@@ -46,7 +47,7 @@ gem 'rubyzip', '= 1.1.0'
 
 gem 'activerecord-import', '>= 0.4.1'
 gem 'redis', '>= 3.0.5'
-gem 'jquery-rails', '= 3.1.0'
+gem 'jquery-rails'
 gem 'dalli'
 gem 'will_paginate'
 gem 'sanitize'

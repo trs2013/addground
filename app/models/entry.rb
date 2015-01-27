@@ -13,7 +13,8 @@ class Entry < ActiveRecord::Base
   before_create :create_summary
   before_update :create_summary
   after_commit :mark_as_unread, on: :create
-  after_commit :add_to_set, on: :create
+  after_commit :add_to_created_at_set, on: :create
+  after_commit :add_to_published_set, on: :create
   after_commit :increment_feed_stat, on: :create
   after_commit :touch_feed_last_published_entry, on: :create
 
@@ -211,6 +212,42 @@ class Entry < ActiveRecord::Base
     end
   end
 
+  def self.from_id_cache(user_id, page)
+    user = User.find(user_id)
+
+    if page
+      page = page.to_i
+    else
+      page = 1
+    end
+
+    start = (page - 1) * WillPaginate.per_page
+    stop = start + WillPaginate.per_page - 1
+
+    cache_key = FeedbinUtils.redis_user_entries_published_key(user_id)
+    key_exists, entry_ids = $redis.multi do
+      $redis.exists(cache_key)
+      $redis.zrevrange(cache_key, start, stop)
+    end
+
+    if !key_exists
+
+      feed_ids = user.subscriptions.pluck(:feed_id)
+
+      keys = feed_ids.map do |feed_id|
+        FeedbinUtils.redis_feed_entries_published_key(feed_id)
+      end
+
+      count, expire, entry_ids = $redis.multi do
+        $redis.zunionstore(cache_key, keys)
+        $redis.expire(cache_key, 2.minutes.to_i)
+        $redis.zrevrange(cache_key, start, stop)
+      end
+
+    end
+    where(id: entry_ids)
+  end
+
   def fully_qualified_url
     entry_url = self.url
     if entry_url.present? && is_fully_qualified(entry_url)
@@ -264,9 +301,15 @@ class Entry < ActiveRecord::Base
     SearchIndexStore.perform_async(self.class.name, self.id)
   end
 
-  def add_to_set
+  def add_to_created_at_set
     score = "%10.6f" % self.created_at.to_f
     key = FeedbinUtils.redis_feed_entries_created_at_key(self.feed_id)
+    $redis.zadd(key, score, self.id)
+  end
+
+  def add_to_published_set
+    score = "%10.6f" % self.published.to_f
+    key = FeedbinUtils.redis_feed_entries_published_key(self.feed_id)
     $redis.zadd(key, score, self.id)
   end
 

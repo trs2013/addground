@@ -1,13 +1,15 @@
 require 'RMagick'
 class FaviconFetcher
   include Sidekiq::Worker
-  sidekiq_options retry: false
+  sidekiq_options retry: false, queue: :favicon
 
   def perform(host)
     favicon = Favicon.where(host: host).first_or_initialize
     if !updated_recently?(favicon.updated_at)
       update_favicon(favicon)
     end
+  rescue
+    Librato.increment('favicon.failed')
   end
 
   def update_favicon(favicon)
@@ -25,8 +27,9 @@ class FaviconFetcher
       data = download_favicon(favicon_url)
     end
 
-    if data
+    if favicon.favicon != data
       favicon.favicon = data
+      Librato.increment('favicon.updated')
     end
 
     favicon.save
@@ -43,11 +46,10 @@ class FaviconFetcher
     if favicon_links.present?
       favicon_url = favicon_links.last.to_s
       favicon_url = URI.parse(favicon_url)
+      favicon_url.scheme = 'http'
       if !favicon_url.host
-        favicon_url.host = host
-      end
-      if !favicon_url.scheme
-        favicon_url.scheme = 'http'
+        favicon_url = URI::HTTP.build(scheme: 'http', host: host)
+        favicon_url = favicon_url.merge(favicon_links.last.to_s)
       end
     end
     favicon_url
@@ -60,21 +62,35 @@ class FaviconFetcher
   end
 
   def download_favicon(url)
-    response = HTTParty.get(url, {timeout: 20})
+    response = HTTParty.get(url, timeout: 20, verify: false)
     base64_favicon(response.body)
   end
 
   def base64_favicon(data)
     begin
-      favicon = Magick::Image.from_blob(data)
+      favicons = Magick::Image.from_blob(data)
     rescue Magick::ImageMagickError
-      favicon = Magick::Image.from_blob(data) { |image| image.format = 'ico' }
+      favicons = Magick::Image.from_blob(data) { |image| image.format = 'ico' }
     end
-    favicon = favicon.last
+
+    favicon = remove_blank_images(favicons).last
+
+    if favicon.columns > 32
+      favicon = favicon.resize_to_fit(32, 32)
+    end
+
     blob = favicon.to_blob { |image| image.format = 'png' }
     Base64.encode64(blob).gsub("\n", '')
   rescue
     nil
+  end
+
+  def remove_blank_images(favicons)
+    favicons.reject do |favicon|
+      favicon = favicon.scale(1, 1)
+      pixel = favicon.pixel_color(0,0)
+      favicon.to_color(pixel) == "none"
+    end
   end
 
   def updated_recently?(date)

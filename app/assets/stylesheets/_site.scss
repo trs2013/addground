@@ -62,7 +62,6 @@ $arrow-shadow-color-sunset: #c8c7be;
 $selected: #3399FF;
 $selected-off: #505a65;
 
-
 /*------------------------------------------------------------------------------
 Grid
 ------------------------------------------------------------------------------*/
@@ -1030,11 +1029,11 @@ th {
     background-color: #FFF;
     border-radius: 8px;
     border: 1px solid $border-color;
-    margin: 0 0 20px 0;
+    margin: 0 0 30px 0;
     padding: 0;
     list-style: none;
     li {
-        padding: 10px 30px 10px 30px;
+        padding: 15px 30px;
         margin: 0;
         border-bottom: 1px solid $border-color;
         position: relative;
@@ -1052,7 +1051,8 @@ th {
         font-size: 16px;
         font-weight: bold;
         margin: 0;
-        padding: 5px 0 5px 40px;
+        padding: 0 0 0 40px;
+        overflow: visible;
     }
     .service-error {
         padding-right: 30px;
@@ -1118,61 +1118,74 @@ th {
 
     }
     .icon-share-app_dot_net {
-        background: image-url("icon-share-app-dot-net.svg") 0 0 no-repeat;
+        background-image: image-url("icon-share-app-dot-net.svg");
         background-size: 25px 25px;
+        @include share-icon(0, 0);
     }
     .icon-share-facebook {
-        background: image-url("icon-share-facebook.svg") 0 0 no-repeat;
+        background-image: image-url("icon-share-facebook.svg");
         background-size: 25px 25px;
+        @include share-icon(0, 0);
     }
     .icon-share-twitter {
-        background: image-url("icon-share-twitter.svg") 1px 3px no-repeat;
+        background-image: image-url("icon-share-twitter.svg");
         background-size: 21px 25px;
+        @include share-icon(1, 3);
     }
     .icon-share-evernote {
-        background: image-url("icon-share-evernote.svg") 1px 3px no-repeat;
+        background-image: image-url("icon-share-evernote.svg");
         background-size: 20px 25px;
+        @include share-icon(1, 3);
     }
     .icon-share-tumblr {
-        background: image-url("icon-share-tumblr.svg") 4px 3px no-repeat;
+        background-image: image-url("icon-share-tumblr.svg");
         background-size: 14px 24px;
+        @include share-icon(4, 3);
     }
     .icon-share-pinboard {
-        background: image-url("icon-share-pinboard.svg") 0 3px no-repeat;
+        background-image: image-url("icon-share-pinboard.svg");
         background-size: 25px 25px;
+        @include share-icon(0, 3);
     }
     .icon-share-kindle {
-        background: image-url("icon-share-kindle.png") 0 3px no-repeat;
+        background-image: image-url("icon-share-kindle.svg");
         background-size: 26px 23px;
+        @include share-icon(0, 3);
     }
     .icon-share-email {
-        background: image-url("icon-share-email.svg") 0 6px no-repeat;
+        background-image: image-url("icon-share-email.svg");
         background-size: 24px 16px;
+        @include share-icon(0, 6);
     }
     .icon-share-instapaper {
-        background: image-url("icon-share-instapaper.svg") 7px 2px no-repeat;
+        background-image: image-url("icon-share-instapaper.svg");
         background-size: 10px 23px;
+        @include share-icon(7, 2);
     }
     .icon-share-readability {
-        background: image-url("icon-share-readability.svg") 0 5px no-repeat;
+        background-image: image-url("icon-share-readability.svg");
         background-size: 24px 17px;
+        @include share-icon(0, 5);
     }
     .icon-share-pocket {
-        background: image-url("icon-share-pocket.svg") 0 5px no-repeat;
+        background-image: image-url("icon-share-pocket.svg");
         background-size: 24px 21px;
+        @include share-icon(0, 5);
     }
     .icon-share-buffer {
-        background: image-url("icon-share-buffer.svg") 0 2px no-repeat;
+        background-image: image-url("icon-share-buffer.svg");
         background-size: 25px 25px;
+        @include share-icon(0, 2);
     }
     .icon-share-custom {
-        background: image-url("icon-share-custom.svg") 2px 4px no-repeat;
+        background-image: image-url("icon-share-custom.svg");
         background-size: 22px 18px;
+        @include share-icon(2, 4);
     }
 }
 
 .inset {
-    background-color: #ededed;
+    background-color: $list-background-color;
     border-radius: 8px;
     border: 1px solid $border-color;
     margin: 0 0 20px 0;
@@ -1236,7 +1249,7 @@ Structure
         width: 100%;
         max-width: 100%;
         margin: 0;
-        padding: 4px 5px 3px 36px;
+        padding: 4px 36px 3px 36px;
         font-size: 14px;
         background: image-url("favicon-search-light.svg") 14px 11px no-repeat;
         background-size: 14px 14px, 16px 16px;
@@ -1860,7 +1873,7 @@ li.selected > a .favicon-wrap {
 $saved-search-control-height: 48px;
 
 .search-control {
-    @include background-color($drawer-background-color, $drawer-background-color-night, $drawer-background-color-sunset);
+    @include background-color($list-background-color, $list-background-color-night, $list-background-color-sunset);
     font-size: 11px;
     line-height: 14px;
     height: $toolbar-height + $saved-search-control-height;
@@ -1911,12 +1924,12 @@ $saved-search-control-height: 48px;
     }
     .dropdown-wrap ul {
         top: 35px;
-        left: 2px;
+        left: -52px;
     }
     .saved-search-wrap {
         height: $saved-search-control-height;
         padding: 8px;
-        @include background-color($drawer-background-color, $drawer-background-color-night, $drawer-background-color-sunset);
+        @include background-color($list-background-color, $list-background-color-night, $list-background-color-sunset);
         position: relative;
         border-bottom: 1px solid $border-color;
         @include border-color($border-color, $border-color-night, $border-color-sunset);
@@ -1932,9 +1945,9 @@ $saved-search-control-height: 48px;
         @include arrow(
             $x-position: 12px,
             $y-position: -1px,
-            $arrow-color: $drawer-background-color,
-            $arrow-color-night: $drawer-background-color-night,
-            $arrow-color-sunset: $drawer-background-color-sunset,
+            $arrow-color: $list-background-color,
+            $arrow-color-night: $list-background-color-night,
+            $arrow-color-sunset: $list-background-color-sunset,
             $shadow-color: $arrow-shadow-color,
             $shadow-color-night: $arrow-shadow-color-night,
             $shadow-color-sunset: $arrow-shadow-color-sunset,
@@ -2401,7 +2414,7 @@ $saved-search-control-height: 48px;
     width: 100%;
     border-bottom: 1px solid $border-color;
     @include border-color($border-color, $border-color-night, $border-color-sunset);
-    @include background-color($drawer-background-color, $drawer-background-color-night, $drawer-background-color-sunset);
+    @include background-color($list-background-color, $list-background-color-night, $list-background-color-sunset);
     @include arrow(
         $x-position: 20px,
         $y-position: -1px,
@@ -2443,7 +2456,7 @@ $saved-search-control-height: 48px;
     .font-settings {
         position: relative;
         select {
-            @include background-color($drawer-background-color, $drawer-background-color-night, $drawer-background-color-sunset);
+            @include background-color($list-background-color, $list-background-color-night, $list-background-color-sunset);
             width: 115px;
             padding: 0;
             font-size: 13px;
@@ -2806,8 +2819,9 @@ $saved-search-control-height: 48px;
             width: 16px;
         }
         ul {
-            left: -5px;
-            top: 35px;
+            margin-left: -108px;
+            left: 50%;
+            top: 34px;
         }
     }
     .button-settings {
@@ -2846,14 +2860,14 @@ $saved-search-control-height: 48px;
         margin: 0;
         padding: 0;
         display: none;
-        width: 170px;
+        width: 200px;
         list-style: none;
         border: 1px solid transparent;
         @include border-color($border-color, $border-color-night, $border-color-sunset);
-        @include background-color($list-background-color, $list-background-color-night, $list-background-color-sunset);
+        @include background-color(#FFF, $list-background-color-night, $list-background-color-sunset);
+        box-shadow: 0px 0px 2px 2px rgba(0,0,0,0.03);
         position: absolute;
         z-index: 10000;
-        border-radius: 4px;
         li {
             margin: 0;
             padding: 0;
@@ -2861,18 +2875,21 @@ $saved-search-control-height: 48px;
                 position: relative;
                 text-decoration: none;
                 display: block;
-                font-size: 13px;
+                font-size: 16px;
                 @include color($text-color, $text-color-night, $text-color-sunset);
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
                 width: 100%;
-                padding: 8px 7px;
+                padding: 15px;
                 font-family: $font-stack;
                 font-weight: 400 !important;
                 border-bottom: 1px solid transparent;
                 @include border-color($border-color, $border-color-night, $border-color-sunset);
                 cursor: pointer;
+                &.no-border {
+                    border: none;
+                }
             }
             a:hover,
             span:hover,
@@ -2880,29 +2897,24 @@ $saved-search-control-height: 48px;
             &.selected span {
                 @include background-color($border-color, $border-color-night, $border-color-sunset);
             }
-            &:first-child a,
-            &:first-child span {
-                padding-top: 7px;
-                border-radius: 4px 4px 0 0;
-            }
             &:last-child a,
             &:last-child span {
-                padding-bottom: 6px;
-                border-radius: 0 0 4px 4px;
                 border-bottom: none;
             }
             &:first-child {
                 @include arrow(
-                    $x-position: 12px,
+                    $x-position: 50%,
                     $y-position: -7px,
-                    $arrow-color: $list-background-color,
+                    $arrow-color: #FFF,
                     $arrow-color-night: $list-background-color-night,
                     $arrow-color-sunset: $list-background-color-sunset,
                     $shadow-color: $border-color,
                     $shadow-color-night: $border-color-night,
                     $shadow-color-sunset: $border-color-sunset,
                     $origin: left,
-                    $invert: true);
+                    $invert: true) {
+                        margin-left: -3px;
+                    }
             }
             &:first-child:hover:after,
             &.selected:first-child:after {
@@ -2929,7 +2941,7 @@ $saved-search-control-height: 48px;
                     @include arrow(
                         $x-position: 145px,
                         $y-position: -7px,
-                        $arrow-color: $list-background-color,
+                        $arrow-color: #FFF,
                         $arrow-color-night: $list-background-color-night,
                         $arrow-color-sunset: $list-background-color-sunset,
                         $shadow-color: $border-color,
@@ -2944,11 +2956,11 @@ $saved-search-control-height: 48px;
     .share-keyboard {
         font-size: 11px;
         position: absolute;
-        right: 7px;
-        top: 7px;
+        right: 10px;
+        top: 18px;
         font-style: normal;
         margin-top: 2px;
-        color: #CCC;
+        color: $text-color-light;
     }
 }
 
@@ -2959,7 +2971,7 @@ $saved-search-control-height: 48px;
     a {
         display: block;
         text-decoration: none;
-        color: #333;
+        @include color($text-header-color, $text-header-color-night, $text-header-color-sunset);
     }
     h1 {
         font-size: 2.4em;
@@ -3074,11 +3086,12 @@ $saved-search-control-height: 48px;
     }
 
     pre code {
-        background-color: transparent;
+        @include background-color($list-background-color, $list-background-color-night, $list-background-color-sunset);
         display: block;
         overflow-x: auto;
         white-space: pre;
         word-wrap: normal;
+        font-size: 90%;
     }
 
     tt, code, kbd, samp {
@@ -3219,6 +3232,23 @@ $saved-search-control-height: 48px;
             left: 8px;
             background-color: #FFF;
         }
+    }
+
+    .instagram-media {
+        background:#FFF;
+        border: 0;
+        border-radius: 3px;
+        box-shadow: 0 0 1px 0 rgba(0,0,0,0.5), 0 1px 10px 0 rgba(0,0,0,0.15);
+        margin: 1px 1px 1.1em 1px;
+        max-width: 658px;
+        padding: 0;
+        width: 99.375%;
+        width: -webkit-calc(100% - 2px);
+        width: calc(100% - 2px);
+    }
+
+    .fluid-width-video-wrapper {
+        margin-bottom: 1.1em;
     }
 }
 
@@ -3797,7 +3827,7 @@ Settings
     }
     .preview-group {
         z-index: 1000;
-        background-color: #ededed;
+        background-color: $list-background-color;
         margin-bottom: 30px;
         @media (max-width: 528px) {
             background-color: $list-background-color;
@@ -4100,7 +4130,7 @@ Settings
     }
     .feed-controls {
         border-radius: 8px 8px 0 0;
-        background-color: #ededed;
+        background-color: $list-background-color;
         border: 1px solid #DCDEE0;
         padding: 15px 30px 12px 30px;
         position: absolute;
@@ -4119,7 +4149,20 @@ Settings
     .feed-dropdown {
         display: inline-block;
         ul {
+            width: 215px;
             top: 25px;
+            left: -81px;
+            @media (max-width: 528px) {
+                left: -10px;
+                li:first-child:after {
+                    left: 15px;
+                    margin: 0;
+                }
+                li:first-child:before {
+                    left: 14px;
+                    margin: 0;
+                }
+            }
         }
     }
     .feeds-toolbar-button {
@@ -5689,14 +5732,19 @@ Media Players
 /*------------------------------------------------------------------------------
 Bigfoot
 ------------------------------------------------------------------------------*/
-.footnote-button {
-    @include background-color($text-color, $text-color-night, $text-color-sunset);
-}
-.footnote-circle {
+.bigfoot-footnote__button {
     @include background-color($text-color-light, $text-color-light-night, $text-color-light-sunset);
 }
-.footnote-content-wrapper {
+.footnote-circle {
+    @include fill($text-color-light, $text-color-light-night, $text-color-light-sunset);
+}
+.bigfoot-footnote__content, .bigfoot-footnote__tooltip {
+    background-color: $list-background-color;
     color: $text-color;
+    line-height: 1.6;
+}
+.bigfoot-footnote.is-active {
+    opacity: 1 !important;
 }
 
 /*------------------------------------------------------------------------------
@@ -5751,6 +5799,17 @@ Media Queries
     }
     .ui-resizable-handle {
         display: none !important;
+    }
+    .search-control .dropdown-wrap ul {
+        left: 8px;
+        li:first-child:after {
+            left: 15px;
+            margin: 0;
+        }
+        li:first-child:before {
+            left: 14px;
+            margin: 0;
+        }
     }
 }
 
@@ -5853,7 +5912,7 @@ Media Queries
 }
 
 .share-form {
-    @include background-color($drawer-background-color, $drawer-background-color-night, $drawer-background-color-sunset);
+    @include background-color($list-background-color, $list-background-color-night, $list-background-color-sunset);
     padding: 17px 20px;
     border-bottom: 1px solid transparent;
     @include border-color($border-color, $border-color-night, $border-color-sunset);

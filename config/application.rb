@@ -45,5 +45,6 @@ module Feedbin
     config.exceptions_app = self.routes
 
     config.active_record.schema_format = :sql
+
   end
 end
