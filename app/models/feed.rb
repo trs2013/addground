@@ -28,23 +28,14 @@ class Feed < ActiveRecord::Base
     taggings
   end
 
-  def self.create_from_feedjira(feed, site_url)
-    feed.url = site_url
-    feed_record = self.create!(feed: feed)
-    ActiveRecord::Base.transaction do
-      feed.entries.each do |entry|
-        feed_record.entries.create!(entry: entry)
-      end
-    end
-    feed_record
-  end
-
-  def feed=(feed)
-    self.etag          = feed.etag
-    self.last_modified = feed.last_modified
-    self.title         = feed.title
-    self.feed_url      = feed.feed_url
-    self.site_url      = feed.url
+  def self.create_from_parsed_feed!(parsed_feed, site_url = nil)
+    self.create!(
+      url: site_url || parsed_feed.url,
+      etag: parsed_feed.etag
+      last_modified: parsed_feed.last_modified
+      title: parsed_feed.title
+      feed_url: parsed_feed.feed_url
+    )
   end
 
   def check

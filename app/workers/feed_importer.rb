@@ -4,19 +4,25 @@ class FeedImporter
 
   def perform(import_item_id)
     import_item = ImportItem.find(import_item_id)
-
     user = import_item.import.user
-    result = FeedFetcher.new(import_item.details[:xml_url], import_item.details[:html_url]).create_feed!
-    if result.feed
-      subscription = user.safe_subscribe(result.feed)
-      if import_item.details[:title] && subscription
-        subscription.title = import_item.details[:title]
-        subscription.save
-      end
-      if import_item.details[:tag]
-        result.feed.tag(import_item.details[:tag], user, false)
-      end
+
+    feed = Feed.where(feed_url: import_item.details[:xml_url])
+    if feed.blank?
+      feed = create_feed(import_item.details[:xml_url], import_item.details[:html_url])
     end
+
+    user.subscriptions.where(feed: feed).first_or_create!(title: import_item.details[:title])
+
+    if import_item.details[:tag]
+      feed.tag(import_item.details[:tag], user, false)
+    end
+
+  end
+
+  def create_feed(feed_url, site_url)
+    feed_parser = FeedParser.new(feed_url)
+    parsed_feed = feed_parser.fetch_and_parse
+    Feed.create_from_parsed_feed!(parsed_feed, site_url)
   end
 
 end
