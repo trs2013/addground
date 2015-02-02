@@ -26,4 +26,15 @@ class FeedbinUtils
   def self.redis_user_entries_published_key(user_id)
     "user:%d:sorted_entry_ids:published:v2" % user_id
   end
+
+  def last_effective_url(url)
+    result = Curl::Easy.http_head(url) do |curl|
+      curl.follow_location = true
+      curl.ssl_verify_peer = false
+      curl.max_redirects = 5
+      curl.timeout = 5
+    end
+    result.last_effective_url
+  end
+
 end

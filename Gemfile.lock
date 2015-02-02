@@ -411,6 +411,7 @@ DEPENDENCIES
   codeclimate-test-reporter
   coffee-rails
   connection_pool
+  curb
   dalli
   dotenv-rails
   evernote_oauth
