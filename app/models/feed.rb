@@ -31,9 +31,9 @@ class Feed < ActiveRecord::Base
   def self.create_from_parsed_feed!(parsed_feed, site_url = nil)
     self.create!(
       url: site_url || parsed_feed.url,
-      etag: parsed_feed.etag
-      last_modified: parsed_feed.last_modified
-      title: parsed_feed.title
+      etag: parsed_feed.etag,
+      last_modified: parsed_feed.last_modified,
+      title: parsed_feed.title,
       feed_url: parsed_feed.feed_url
     )
   end

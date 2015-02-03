@@ -8,14 +8,15 @@ end
 
 class ParsedFeed
 
-  attr_accessor :feed_url, :url, :title, :last_modified, :etag, :entries
+  attr_accessor  :_source, :feed_url, :url, :title, :last_modified, :etag, :hubs, :entries
 
-  def initialize(feed_url:, url:, title:, last_modified:, etag:, entries:)
+  def initialize(feed_url:, url:, title:, last_modified:, etag:, hubs:, entries:)
     @feed_url = feed_url
     @url = url
     @title = title
     @last_modified = last_modified
     @etag = etag
+    @hubs = hubs
     @entries = entries
   end
 
@@ -33,16 +34,14 @@ class ParsedFeed
   private
 
   def self.normalize(feed, base_feed_url)
-    entries = feed.entries.map do |entry|
-      ParsedEntry.new(entry: entry, feed: feed, base_feed_url: base_feed_url)
-    end
     new(
       feed_url: feed.feed_url.strip,
       url: get_site_url(feed),
       title: feed.title ? feed.title.strip : '(No title)',
       last_modified: feed.last_modified,
       etag: feed.etag ? feed.etag.strip.gsub(/^"/, '').gsub(/"$/, '') : nil,
-      entries: entries
+      hubs: feed.hubs,
+      entries: build_entries(feed, base_feed_url)
     )
   end
 
@@ -67,6 +66,17 @@ class ParsedFeed
   def self.url_from_host(link)
     uri = URI.parse(link)
     URI::HTTP.build(host: uri.host).to_s
+  end
+  
+  def self.build_entries(feed, base_feed_url)
+    entries = []
+    if feed.entries.any?
+      entries= feed.entries.map do |entry|
+        ParsedEntry.new(entry: entry, feed: feed, base_feed_url: base_feed_url)
+      end
+      entries = entries.uniq { |entry| entry.public_id }
+    end
+    entries
   end
 
 end
