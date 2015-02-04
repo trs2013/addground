@@ -8,15 +8,17 @@ end
 
 class ParsedFeed
 
-  attr_accessor  :_source, :feed_url, :url, :title, :last_modified, :etag, :hubs, :entries
+  attr_reader :feed, :entries
 
   def initialize(feed_url:, url:, title:, last_modified:, etag:, hubs:, entries:)
-    @feed_url = feed_url
-    @url = url
-    @title = title
-    @last_modified = last_modified
-    @etag = etag
-    @hubs = hubs
+    @feed = {
+      feed_url: feed_url
+      url: url
+      title: title
+      last_modified: last_modified
+      etag: etag
+      hubs: hubs
+    }
     @entries = entries
   end
 
@@ -30,7 +32,7 @@ class ParsedFeed
       raise ParsedFeedError.new(feed), "Parse failed"
     end
   end
-
+  
   private
 
   def self.normalize(feed, base_feed_url)
@@ -78,5 +80,5 @@ class ParsedFeed
     end
     entries
   end
-
+  
 end

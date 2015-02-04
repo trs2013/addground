@@ -36,6 +36,10 @@ class Feed < ActiveRecord::Base
       title: parsed_feed.title,
       feed_url: parsed_feed.feed_url
     )
+    parsed_feed.entries.each do |parsed_entry|
+      self.entries.create_from_parsed_entry!(parsed_entry)
+    end
+    self
   end
 
   def check

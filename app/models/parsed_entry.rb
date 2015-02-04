@@ -1,16 +1,20 @@
 class ParsedEntry
 
-  attr_accessor :content, :author, :content, :title, :url, :entry_id, :public_id, :data
-
+  attr_accessor :entry
+  
   def initialize(entry:, feed:, base_feed_url: nil)
-    @content   = get_content(entry)
-    @author    = entry.author ? entry.author.strip : nil
-    @content   = content ? content.strip : nil
-    @title     = entry.title ? entry.title.strip : nil
-    @url       = entry.url ? entry.url.strip : nil
-    @entry_id  = entry.entry_id ? entry.entry_id.strip : nil
-    @public_id = build_public_id(entry, feed, base_feed_url)
-    @data      = get_data(entry)
+    @entry = {
+      content: get_content(entry)
+      author: entry.author ? entry.author.strip : nil
+      content: content ? content.strip : nil
+      title: entry.title ? entry.title.strip : nil
+      url: entry.url ? entry.url.strip : nil
+      published: entry.published ? entry.published : nil
+      updated: entry.updated ? entry.updated : nil
+      entry_id: entry.entry_id ? entry.entry_id.strip : nil
+      public_id: build_public_id(entry, feed, base_feed_url)
+      data: get_data(entry)
+    }
   end
 
   private

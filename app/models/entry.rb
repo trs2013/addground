@@ -151,22 +151,18 @@ class Entry < ActiveRecord::Base
   end
 
 
-  def entry=(entry)
-    self.author    = entry.author
-    self.content   = entry.content
-    self.title     = entry.title
-    self.url       = entry.url
-    self.entry_id  = entry.entry_id
-
-    self.published = entry.try(:published)
-    self.updated   = entry.try(:updated)
-
-    self.public_id     = entry._public_id_
-    self.old_public_id = entry._old_public_id_
-
-    if entry.try(:_data_)
-      self.data = entry._data_
-    end
+  def self.create_from_parsed_entry!(parsed_entry)
+    self.create!(
+      author: parsed_entry.author,
+      content: parsed_entry.content,
+      title: parsed_entry.title,
+      url: parsed_entry.url,
+      entry_id: parsed_entry.entry_id,
+      published: parsed_entry.published,
+      updated: parsed_entry.updated,
+      public_id: parsed_entry.public_id,
+      data: parsed_entry.data
+    )
   end
 
   def self.entries_with_feed(entry_ids, sort)

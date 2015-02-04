@@ -22,7 +22,7 @@ class FeedImporter
   def create_feed(feed_url, site_url)
     feed_parser = FeedParser.new(feed_url)
     parsed_feed = feed_parser.fetch_and_parse
-    Feed.create_from_parsed_feed!(parsed_feed, site_url)
+    Feed.create!(parsed_feed.to_h, site_url)
   end
 
 end
