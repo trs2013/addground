@@ -130,15 +130,6 @@ $.extend feedbin,
       appendTo: $(element).closest(".tags-form").children("[data-behavior=tag_completions]")
       delimiter: /(,)\s*/
 
-  autoHeight: ->
-    windowHeight = $(window).height()
-    controlsHeight = $('.collection-edit-controls').outerHeight()
-    collectionOffset = $('.collection-edit-wrapper').offset().top
-    collectionHeight = windowHeight - controlsHeight - collectionOffset
-    $('.collection-edit-wrapper').css({'max-height': "#{collectionHeight}px"})
-
-  entries: {}
-
   preloadEntries: (entry_ids) ->
     cachedIds = []
     for key of feedbin.entries
@@ -160,7 +151,7 @@ $.extend feedbin,
     $('.entry-content').prop('scrollTop', 0)
 
   fitVids: ->
-    $('[data-behavior~=entry_content_target]').fitVids({ customSelector: "iframe[src*='youtu.be'], iframe[src*='www.flickr.com'], iframe[src*='view.vzaar.com']"});
+    $('[data-behavior~=entry_content_target]').fitVids({ customSelector: "iframe[src*='youtu.be'], iframe[src*='www.flickr.com'], iframe[src*='view.vzaar.com'], iframe[src*='embed-ssl.ted.com']"});
 
   formatTweets: ->
     target = $('[data-behavior~=entry_content_wrap]')[0]
@@ -341,7 +332,7 @@ $.extend feedbin,
 
         height = Math.ceil(values.shift() * canvasHeight)
         yPosition = (canvasHeight - height) + 1
-        
+
         context.moveTo(xPosition, yPosition)
 
         for value in values
@@ -402,7 +393,7 @@ $.extend feedbin,
     top = $('.entry-toolbar').outerHeight()
     $('.entry-basement').removeClass('open')
     $('.entry-content').css
-      top: top
+      transform: "translateY(0)"
 
   openEntryBasement: (selectedPanel) ->
     feedbin.openEntryBasementTimeount = setTimeout ( ->
@@ -417,9 +408,9 @@ $.extend feedbin,
     $('.basement-panel').addClass('hide')
     selectedPanel.removeClass('hide')
     $('.entry-basement').addClass('open')
-    newTop = $('.entry-toolbar').outerHeight() + selectedPanel.height()
+    newTop = selectedPanel.height()
     $('.entry-content').css
-      top: newTop
+      transform: "translateY(#{newTop}px)"
 
   applyStarred: (entryId) ->
     if feedbin.Counts.get().isStarred(entryId)
@@ -429,6 +420,8 @@ $.extend feedbin,
     entry = feedbin.entries[entryId]
     feedbin.updateEntryContent(entry.content)
     feedbin.formatEntryContent(entryId, true)
+
+  entries: {}
 
   feedCandidates: []
 
@@ -1099,13 +1092,16 @@ $.extend feedbin,
 
     serviceOptions: ->
       $(document).on 'click', '[data-behavior~=show_service_options]', (event) ->
-        $(@).parents('li').find('.service-options').removeClass('hide')
+        height = $(@).parents('li').find('.service-options').outerHeight()
+        $(@).parents('li').find('.service-options-wrap').addClass('open').css
+          height: height
         $(@).parents('li').find('.show-service-options').addClass('hide')
         event.preventDefault()
         return
 
       $(document).on 'click', '[data-behavior~=hide_service_options]', (event) ->
-        $(@).parents('li').find('.service-options').addClass('hide')
+        $(@).parents('li').find('.service-options-wrap').removeClass('open').css
+          height: 0
         $(@).parents('li').find('.show-service-options').removeClass('hide')
         event.preventDefault()
         return

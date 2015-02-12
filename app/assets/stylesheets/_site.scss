@@ -5,10 +5,10 @@
 /*------------------------------------------------------------------------------
 Variables
 ------------------------------------------------------------------------------*/
-$toolbar-height: 37px;
+$toolbar-height: 41px;
 $font-stack: "Helvetica Neue", Helvetica, Arial, sans-serif;
 $feeds-toolbar-height: 52px;
-$base-button-position: 9px;
+$base-button-position: 10px;
 
 /*-- Colors --*/
 $body-background-color: #FFFFFF;
@@ -61,6 +61,8 @@ $arrow-shadow-color-sunset: #c8c7be;
 
 $selected: #3399FF;
 $selected-off: #505a65;
+
+$inset-bg-color: #f4f6f8;
 
 /*------------------------------------------------------------------------------
 Grid
@@ -852,15 +854,15 @@ input[type="color"],
     @include border-color($border-color, $border-color-night, $border-color-sunset);
     @include color($text-header-color, $text-header-color, $text-header-color);
     @include background-color($input-background-color, $input-background-color-night, $input-background-color-sunset);
-    font-size: 16px;
-    padding: 5px;
+    font-size: 14px;
+    padding: 5px 8px;
     max-width: 300px;
     width: 100%;
     display: inline-block;
-    margin-bottom: 15px;
+    margin-bottom: 7px;
     line-height: 20px;
     vertical-align: middle;
-    border-radius: 4px;
+    border-radius: 2px;
     &:focus {
         outline: none;
         border-color: $selected;
@@ -881,24 +883,6 @@ input[type="color"],
 
 :-ms-input-placeholder {
     color: $text-color-light;
-}
-
-.theme-night {
-    ::-webkit-input-placeholder {
-        color: $text-color-light-night;
-    }
-
-    :-moz-placeholder {
-        color: $text-color-light-night;
-    }
-
-    ::-moz-placeholder {
-        color: $text-color-light-night;
-    }
-
-    :-ms-input-placeholder {
-        color: $text-color-light-night;
-    }
 }
 
 input.processing {
@@ -1032,8 +1016,12 @@ th {
     margin: 0 0 30px 0;
     padding: 0;
     list-style: none;
+    @media (max-width: 528px) {
+        border-left: none;
+        border-right: none;
+    }
     li {
-        padding: 15px 30px;
+        @include settings-row;
         margin: 0;
         border-bottom: 1px solid $border-color;
         position: relative;
@@ -1041,10 +1029,53 @@ th {
         &:last-child {
             border-bottom: none;
         }
+    }
+}
+
+.sharing-services {
+    @extend .pill-list;
+    li {
+        padding: 0;
         @media (max-width: 528px) {
-            padding-right: 15px;
-            padding-left: 15px;
+            padding-right: 0;
+            padding-left: 0;
         }
+    }
+    .service-header {
+        @include settings-row;
+    }
+    .service-options-wrap {
+        position: relative;
+        height: 0;
+        transition: height .2s ease;
+        overflow: hidden;
+        &.open {
+            @include arrow(
+                $x-position: 35px,
+                $y-position: 0,
+                $arrow-color: #FFF,
+                $arrow-color-night: $list-background-color-night,
+                $arrow-color-sunset: $list-background-color-sunset,
+                $shadow-color: $arrow-shadow-color,
+                $shadow-color-night: $arrow-shadow-color-night,
+                $shadow-color-sunset: $arrow-shadow-color-sunset);
+
+        }
+        .service-options {
+            @include settings-row;
+            border-top: 1px solid $border-color;
+            overflow: hidden;
+        }
+    }
+    .share-help {
+        @media (max-width: 528px) {
+            padding-top: 20px;
+        }
+    }
+    .list-action {
+        position: absolute;
+        right: 15px;
+        top: 16px;
     }
     .service-title {
         color: #212121;
@@ -1058,20 +1089,17 @@ th {
         padding-right: 30px;
         background: image-url("icon-error.svg") 100% 2px no-repeat;
     }
-    .list-action {
-        position: absolute;
-        right: 15px;
-        top: 16px;
-    }
-    .service-options {
-        overflow: hidden;
-        padding: 10px 0 0  40px;
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="url"] {
+        display: block;
+        @media (max-width: 528px) {
+            max-width: 100%;
+        }
     }
     small {
-        clear: both;
-        padding-left: 40px;
         display: block;
-        max-width: 600px;
         &.hide {
             display: none;
         }
@@ -1080,42 +1108,19 @@ th {
             max-width: 100%;
         }
     }
+    .half {
+        padding-left: 5px;
+        padding-right: 5px;
+        @media (max-width: 528px) {
+            width: 100%;
+            float: none;
+        }
+    }
+    .pad-top {
+        padding-top: 7px;
+    }
     .service-options {
-        input, .cancel-button {
-            margin: 0 0 0 15px;
-            &.no-margin {
-                margin-left: 0;
-            }
-        }
-        input[type="text"],
-        input[type="password"],
-        input[type="email"] {
-            max-width: 250px;
-            float: left;
-        }
-        .action-button {
-            float: right;
-        }
-        .cancel-button {
-            margin-top: 7px;
-        }
-        small {
-            padding-top: 5px;
-            padding-left: 0;
-        }
-        @media (max-width: 1200px) {
-            input[type="text"],
-            input[type="password"],
-            input[type="email"] {
-                max-width: 100% !important;
-                float: none;
-                margin: 0 0 10px 0 !important;
-            }
-            .action-button {
-
-            }
-        }
-
+        background-color: $list-background-color;
     }
     .icon-share-app_dot_net {
         background-image: image-url("icon-share-app-dot-net.svg");
@@ -1182,10 +1187,11 @@ th {
         background-size: 22px 18px;
         @include share-icon(2, 4);
     }
+
 }
 
 .inset {
-    background-color: $list-background-color;
+    background-color: $inset-bg-color;
     border-radius: 8px;
     border: 1px solid $border-color;
     margin: 0 0 20px 0;
@@ -1251,7 +1257,7 @@ Structure
         margin: 0;
         padding: 4px 36px 3px 36px;
         font-size: 14px;
-        background: image-url("favicon-search-light.svg") 14px 11px no-repeat;
+        background: image-url("favicon-search-light.svg") 14px ($base-button-position + 3) no-repeat;
         background-size: 14px 14px, 16px 16px;
         border-radius: 13px;
         border: none;
@@ -1259,7 +1265,7 @@ Structure
         @include color($text-header-color, $text-header-color-night, $text-header-color-sunset);
         &.processing {
             background-image: image-url("favicon-search-light.svg"), image-url("spinner-day.svg");
-            background-position: 14px 11px, 97% 11px;
+            background-position: 14px ($base-button-position + 3), 97% ($base-button-position + 3);
             background-size: 14px 14px, 16px 16px;
             .theme-sunset & {
                 background-image: image-url("favicon-search-light.svg"), image-url("spinner-sunset.svg");
@@ -1361,10 +1367,13 @@ Structure
     align-items: flex-start;
     .feeds-column,
     .entries-column {
-        width: 245px;
         flex-grow: 0;
         border-right: 1px solid transparent;
         @include border-color($border-color, $border-color-night, $border-color-sunset);
+    }
+    .feeds-column {
+        width: 245px;
+        @include background-color($list-background-color, $list-background-color-night, $list-background-color-sunset);
     }
     .entries-column {
         width: 320px;
@@ -1372,10 +1381,6 @@ Structure
     .entry-column {
         flex-grow: 1;
     }
-}
-
-.feeds-column {
-    @include background-color($list-background-color, $list-background-color-night, $list-background-color-sunset);
 }
 
 .app-panel {
@@ -1407,7 +1412,7 @@ Structure
             width: 3px;
             position: absolute;
             left: 19px;
-            top: 12px;
+            top: $base-button-position + 4;
             content: "";
         }
         &:after {
@@ -1415,20 +1420,28 @@ Structure
             height: 3px;
             width: 13px;
             position: absolute;
-            top: 17px;
+            top: $base-button-position + 9;
             left: 14px;
             content: "";
         }
     }
 }
 
-.hamburger-menu {
+.hamburger-menu-wrap {
+    position: absolute;
     display: none;
     user-select: none;
+    top: 0;
+    right: 0;
+    height: $toolbar-height;
+    width: $toolbar-height;
+}
+
+.hamburger-menu {
     $bar-height: 3px;
     position: absolute;
     cursor: pointer;
-    top: 10px;
+    top: $base-button-position + 2;
     right: 10px;
     height: 17px;
     width: 22px;
@@ -1467,6 +1480,7 @@ Structure
     border-top: 1px solid transparent;
     @include border-color($border-color, $border-color-night, $border-color-sunset);
     position: absolute;
+    z-index: 2;
     bottom: 0;
     left: 0;
     right: 0;
@@ -1538,9 +1552,9 @@ $subscribe-wrap-height: 49px;
     right: 0;
     z-index: 1;
     @include background-color($list-background-color, $list-background-color-night, $list-background-color-sunset);
-    transition: top .2s ease;
+    transition: transform .2s ease;
     &.show-subscribe {
-        top: $toolbar-height + $subscribe-wrap-height;
+        transform: translateY($subscribe-wrap-height);
     }
 }
 
@@ -1802,6 +1816,7 @@ li.selected > a .favicon-wrap {
 
 .favicon {
     background: image-url("favicon-feed-blue.svg") 0 0 no-repeat;
+    @include background-color($text-color-light, $text-color-light-night, $text-color-light-sunset);
 }
 
 .collection-favicon {
@@ -1825,6 +1840,9 @@ li.selected > a .favicon-wrap {
     height: 16px;
     width: 11px;
     padding: 0;
+    .full-screen & {
+        display: none !important;
+    }
 }
 
 .entries-header {
@@ -1994,13 +2012,13 @@ $saved-search-control-height: 48px;
     overflow-y: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
-    transition: top .2s ease;
+    transition: transform .2s ease;
     @include background-color($body-background-color, $body-background-color-night, $body-background-color-sunset);
     &.show-search-options {
-        top: $toolbar-height + $toolbar-height;
+        transform: translateY($toolbar-height);
     }
     &.show-saved-search {
-        top: $toolbar-height + $toolbar-height + $saved-search-control-height;
+        transform: translateY($toolbar-height + $saved-search-control-height);
     }
     ul {
         margin: 0;
@@ -2374,34 +2392,59 @@ $saved-search-control-height: 48px;
         height: $toolbar-height;
         width: $toolbar-height;
     }
-    .favicon-wrap {
+    .site-info {
+        position: absolute;
         top: $base-button-position;
         left: 13px;
-        box-shadow: none;
-        background-color: transparent;
-        .theme-night & {
-            background-color: #FFF;
-            box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.1);
+        display: block;
+        .full-screen & {
+            left: 58px;
         }
-        .theme-sunset & {
-            background-color: transparent;
+        .favicon-wrap {
+            top: 0;
+            left: 0;
             box-shadow: none;
+            background-color: transparent;
+            .theme-night & {
+                background-color: #FFF;
+                box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.1);
+            }
+            .theme-sunset & {
+                background-color: transparent;
+                box-shadow: none;
+            }
+        }
+        .entry-feed-title {
+            position: absolute;
+            top: 2px;
+            left: 26px;
+            display: block;
+            font-size: 14px;
+            @include color($text-header-color, $text-header-color-night, $text-header-color-sunset);
+            text-decoration: none;
+            white-space: nowrap;
         }
     }
-    .entry-feed-title {
-        position: absolute;
-        top: $base-button-position + 2;
-        left: 38px;
-        display: block;
-        font-size: 14px;
-        @include color($text-header-color, $text-header-color-night, $text-header-color-sunset);
-        text-decoration: none;
+    .button-full-screen {
+        display: none;
+        border-right: 1px solid transparent;
+        @include border-color($border-color, $border-color-night, $border-color-sunset);
+        svg {
+            position: absolute;
+            top: $base-button-position + 3;
+            left: 15px;
+            height: 14px;
+            width: 14px;
+        }
+        .full-screen & {
+            display: block;
+        }
     }
 }
 
 .entry-basement {
     position: absolute;
-    top: $toolbar-height + $toolbar-height;
+    top: $toolbar-height;
     left: 0;
     width: 100%;
     &.foreground {
@@ -2416,7 +2459,7 @@ $saved-search-control-height: 48px;
     @include border-color($border-color, $border-color-night, $border-color-sunset);
     @include background-color($list-background-color, $list-background-color-night, $list-background-color-sunset);
     @include arrow(
-        $x-position: 20px,
+        $x-position: 63px,
         $y-position: -1px,
         $arrow-color: $body-background-color,
         $arrow-color-night: $body-background-color-night,
@@ -2428,18 +2471,6 @@ $saved-search-control-height: 48px;
     {
         z-index: 10;
         visibility: hidden;
-    }
-    .full-screen & {
-        @include arrow(
-            $x-position: 55px,
-            $y-position: -1px,
-            $arrow-color: $body-background-color,
-            $arrow-color-night: $body-background-color-night,
-            $arrow-color-sunset: $body-background-color-sunset,
-            $shadow-color: $arrow-shadow-color,
-            $shadow-color-night: $arrow-shadow-color-night,
-            $shadow-color-sunset: $arrow-shadow-color-sunset,
-            $origin: right);
     }
     .entry-basement.open &:after,
     .entry-basement.open &:before {
@@ -2647,8 +2678,9 @@ $saved-search-control-height: 48px;
 }
 
 .entry-content-wrap {
+    overflow: hidden;
     position: absolute;
-    top: $toolbar-height;
+    top: 0;
     bottom: 0;
     left: 0;
     right: 0;
@@ -2666,7 +2698,7 @@ $saved-search-control-height: 48px;
     margin: 0;
     overflow-y: auto;
     overflow-x: hidden;
-    transition: top .2s ease;
+    transition: transform .2s ease;
     -webkit-overflow-scrolling: touch;
     z-index: 2;
 }
@@ -2731,7 +2763,7 @@ $saved-search-control-height: 48px;
     position: absolute;
     top: 0;
     right: 0px;
-    width: 250px;
+    width: 270px;
     height: $toolbar-height - 1;
     z-index: 1;
     background-image: linear-gradient(to right, rgba($body-background-color, 0) 0%, $body-background-color 10%);
@@ -2743,24 +2775,6 @@ $saved-search-control-height: 48px;
     }
     form {
         margin: 0;
-    }
-    .entry-button {
-        display: block;
-        background-color: #ddd;
-        z-index: 2;
-        -webkit-appearance: none;
-        border: none;
-        background: none;
-        width: 45px;
-        height: $toolbar-height - 1;
-        padding: 0;
-        position: relative;
-        svg {
-            pointer-events: none;
-        }
-        svg * {
-            @include fill($text-color-light, $text-summary-color-night, $text-color-light-sunset);
-        }
     }
     .entry-button-wrap {
         float: right;
@@ -2796,7 +2810,7 @@ $saved-search-control-height: 48px;
         svg {
             position: absolute;
             top: $base-button-position + 1;
-            left: 15px;
+            left: 16px;
             height: 17px;
             width: 17px;
         }
@@ -2834,23 +2848,47 @@ $saved-search-control-height: 48px;
             width: 16px;
         }
     }
-    .button-full-screen {
-        display: none;
+    .button-app-settings {
+        border-left: 1px solid transparent;
+        @include border-color($border-color, $border-color-night, $border-color-sunset);
         svg {
             position: absolute;
-            top: $base-button-position + 3;
-            top: 12px;
-            left: 3px;
-            height: 14px;
+            top: $base-button-position + 6;
+            left: 14px;
+            height: 8px;
             width: 14px;
         }
-    }
-    .full-screen & {
-        width: 300px;
-        right: -10px;
-        .button-full-screen {
-            display: block;
+        ul {
+            top: $toolbar-height - 6;
+            right: 8px !important;
+            li:first-child:after {
+                left: 179px !important;
+                margin: 0;
+            }
+            li:first-child:before {
+                left: 178px !important;
+                margin: 0;
+            }
         }
+    }
+}
+
+.entry-button {
+    display: block;
+    background-color: #ddd;
+    z-index: 2;
+    -webkit-appearance: none;
+    border: none;
+    background: none;
+    width: 44px;
+    height: $toolbar-height - 1;
+    padding: 0;
+    position: relative;
+    svg {
+        pointer-events: none;
+    }
+    svg * {
+        @include fill($text-color-light, $text-summary-color-night, $text-color-light-sunset);
     }
 }
 
@@ -3000,6 +3038,172 @@ $saved-search-control-height: 48px;
     }
 }
 
+
+.share-form {
+    @include background-color($list-background-color, $list-background-color-night, $list-background-color-sunset);
+    padding: 17px 20px;
+    border-bottom: 1px solid transparent;
+    @include border-color($border-color, $border-color-night, $border-color-sunset);
+    @include arrow(
+        $x-position: 241px,
+        $y-position: -1px,
+        $arrow-color: $body-background-color,
+        $arrow-color-night: $body-background-color-night,
+        $arrow-color-sunset: $body-background-color-sunset,
+        $shadow-color: $arrow-shadow-color,
+        $shadow-color-night: $arrow-shadow-color-night,
+        $shadow-color-sunset: $arrow-shadow-color-sunset,
+        $origin: right)
+    {
+        z-index: 10;
+        visibility: hidden;
+    }
+    .entry-basement.open &:after,
+    .entry-basement.open &:before {
+        visibility: visible;
+    }
+    .share-form-inner {
+        max-width: 620px;
+        margin: 0 auto;
+    }
+    h2 {
+        font-size: 16px;
+        @include color($text-header-color, $text-header-color-night, $text-header-color-sunset);
+        font-weight: bold;
+        margin: 0 0 15px 0;
+    }
+    .field-cluster {
+        margin-bottom: 15px;
+        input, textarea {
+            @include background-color($input-background-color, $input-background-color, $input-background-color);
+            @include color($text-header-color, $text-header-color, $text-header-color);
+            width: 100%;
+            max-width: 100%;
+            margin: 0;
+            position: relative;
+            border-radius: 0;
+            border-bottom: none;
+            padding: 10px 10px 8px 10px !important;
+            font-size: 16px;
+            &:focus {
+                @include border-color($border-color, $border-color-night, $border-color-sunset);
+            }
+            &:first-child {
+                border-radius: 4px 4px 0 0;
+            }
+            &:last-child {
+                border-radius: 0 0 4px 4px;
+                border-bottom: 1px solid transparent;
+                @include border-color($border-color, $border-color-night, $border-color-sunset);
+            }
+        }
+        textarea {
+            resize: none;
+        }
+    }
+    .share-controls {
+        overflow: hidden;
+        margin-bottom: 10px;
+        .checkbox, .radio, .control {
+            float: left;
+            margin-left: 15px;
+            font-size: 14px;
+            @include color($text-color-light-night, $text-color-light-night, $text-color-light-night);
+            &:first-child {
+                margin-left: 0
+            }
+            input {
+                margin-top: 2px;
+            }
+        }
+    }
+    .button {
+        padding: 9px 15px;
+        background-color: $selected;
+        color: #fff;
+        &:hover {
+            background-color: #2877c6;
+        }
+    }
+    .button-text {
+        background-color: transparent;
+        color: $selected;
+        &:hover {
+            background-color: transparent;
+            color: #2877c6;
+        }
+    }
+    .button-wrap {
+        overflow: hidden;
+        input, button {
+            float: right;
+        }
+    }
+    .icon-share-email {
+        background: image-url("icon-share-email.svg") 100% 0 no-repeat;
+        background-size: 24px 16px;
+    }
+    .icon-share-evernote {
+        background: image-url("icon-share-evernote.svg") 100% 0 no-repeat;
+        background-size: 20px 25px;
+    }
+    .icon-share-tumblr {
+        background: image-url("icon-share-tumblr.svg") 100% 0 no-repeat;
+        background-size: 14px 24px;
+    }
+    .icon-share-pinboard {
+        background: image-url("icon-share-pinboard.svg") 100% 0 no-repeat;
+        background-size: 25px 25px;
+    }
+    .autocomplete-parent {
+        position: relative;
+        .share-autocomplete {
+            z-index: 2;
+            position: absolute;
+            top: 39px;
+            left: 7px;
+            width: 100%;
+            max-width: 400px;
+            @include background-color($input-background-color, $input-background-color, $input-background-color);
+            border-left: 1px solid transparent;
+            border-right: 1px solid transparent;
+            border-bottom: 1px solid transparent;
+            @include border-color($border-color, $border-color-night, $border-color-sunset);
+        }
+        .autocomplete-suggestion {
+            &:hover, &.autocomplete-selected {
+                background-color: rgba(#000, .1);
+            }
+        }
+    }
+}
+
+.theme-night.full-screen .share-form:before {
+    border-top-color: black;
+}
+.theme-sunset.full-screen .share-form:before {
+    border-top-color: $arrow-shadow-color-sunset;
+}
+.theme-night.full-screen .share-form:after {
+    border-top-color: $body-background-color-night;
+}
+.theme-sunset.full-screen .share-form:after {
+    border-top-color: $body-background-color-sunset;
+}
+
+.theme-night.full-screen .entry-settings:before {
+    border-top-color: black;
+}
+.theme-sunset.full-screen .entry-settings:before {
+    border-top-color: $arrow-shadow-color-sunset;
+}
+.theme-night.full-screen .entry-settings:after {
+    border-top-color: $body-background-color-night;
+}
+.theme-sunset.full-screen .entry-settings:after {
+    border-top-color: $body-background-color-sunset;
+}
+
 .content-styles {
     font-style: normal;
     font-size: 1.15em;
@@ -3037,12 +3241,10 @@ $saved-search-control-height: 48px;
     p,
     ul,
     ol,
-    figure {
+    figure,
+    blockquote,
+    .media-container {
         margin: 0 0 1.1em 0;
-    }
-
-    blockquote {
-        margin: 0 0 1.3em 0;
     }
 
     blockquote[align="center"] {
@@ -3081,12 +3283,9 @@ $saved-search-control-height: 48px;
         }
     }
 
-    code {
-        @include color($text-color-body, $text-color-body-night, $text-color-body-sunset);
-    }
-
     pre code {
         @include background-color($list-background-color, $list-background-color-night, $list-background-color-sunset);
+        @include color($text-color-body, $text-color-body-night, $text-color-body-sunset);
         display: block;
         overflow-x: auto;
         white-space: pre;
@@ -3137,10 +3336,6 @@ $saved-search-control-height: 48px;
 
     iframe[src*='w.soundcloud.com'] {
         background-color: transparent;
-    }
-
-    .media-container {
-        margin: 0 0 1.1em 0;
     }
 
     .download-link {
@@ -3323,66 +3518,6 @@ $saved-search-control-height: 48px;
         opacity: .5;
     }
 
-}
-
-.audio-player {
-    font-family: $font-stack !important;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 52px;
-    background-color: rgba(51,51,51,.99);
-    z-index: 10000;
-    color: #fff;
-    padding-left: 40px;
-    button {
-        @extend .hide-text;
-        position: relative;
-        position: absolute;
-        left: 12px;
-        top: 14px;
-        -webkit-appearance: none;
-        height: 24px;
-        width: 24px;
-        border: none;
-        &.playing {
-            &:before {
-                background-position: 0 -18px;
-            }
-        }
-        &:before {
-            content: "";
-            position: absolute;
-            background: image-url("icon-play.svg") 0 0 no-repeat;
-            background-size: 15px 36px;
-            height: 18px;
-            width: 15px;
-            top: 3px;
-            left: 5px;
-        }
-    }
-    .audio-title {
-        margin-top: 18px;
-        padding-right: 160px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        width: 100%;
-    }
-    .download-link {
-        position: absolute;
-        right: 20px;
-        top: 18px;
-    }
-    .progress {
-        background-color: $selected;
-        height: 2px;
-        width: 0%;
-        position: absolute;
-        bottom: 0;
-        left: 0;
-    }
 }
 
 .font-serif-1 .entry-inner {
@@ -3601,7 +3736,7 @@ Settings
     .settings-nav {
         display: none;
     }
-    .hamburger-menu,
+    .hamburger-menu-wrap,
     .desktop-hide {
         display: block !important;
     }
@@ -3713,10 +3848,6 @@ Settings
     h3.box-header {
         margin: 0;
     }
-    .button {
-        padding: 7px 17px;
-        font-size: 16px;
-    }
     .button-mini {
         padding: 7px 10px;
     }
@@ -3827,7 +3958,7 @@ Settings
     }
     .preview-group {
         z-index: 1000;
-        background-color: $list-background-color;
+        background-color: $inset-bg-color;
         margin-bottom: 30px;
         @media (max-width: 528px) {
             background-color: $list-background-color;
@@ -3907,11 +4038,7 @@ Settings
             margin: 0;
             padding: 0;
             border-bottom: 1px solid $border-color;
-            padding: 15px 30px;
-            @media (max-width: 528px) {
-                padding-left: 15px;
-                padding-right: 15px;
-            }
+            @include settings-row;
         }
         &.no-margin {
             margin-bottom: 0;
@@ -3979,15 +4106,11 @@ Settings
             position: relative;
             border: none;
             border-bottom: 1px solid $border-color;
-            padding: 15px 30px;
             display: block;
             border-radius: 0 !important;
             max-width: 100% !important;
             width: 100%;
-            @media (max-width: 528px) {
-                padding-left: 15px;
-                padding-right: 15px;
-            }
+            @include settings-row;
         }
         label {
             user-select: none;
@@ -4130,7 +4253,7 @@ Settings
     }
     .feed-controls {
         border-radius: 8px 8px 0 0;
-        background-color: $list-background-color;
+        background-color: $inset-bg-color;
         border: 1px solid #DCDEE0;
         padding: 15px 30px 12px 30px;
         position: absolute;
@@ -4141,6 +4264,8 @@ Settings
             padding-left: 15px;
             padding-right: 15px;
             border-radius: 0;
+            border-left: none;
+            border-right: none;
         }
     }
     .feeds-checkbox {
@@ -4160,6 +4285,19 @@ Settings
                 }
                 li:first-child:before {
                     left: 14px;
+                    margin: 0;
+                }
+            }
+        }
+        &.dropdown-right ul {
+            @media (max-width: 528px) {
+                left: -100px;
+                li:first-child:after {
+                    left: 175px;
+                    margin: 0;
+                }
+                li:first-child:before {
+                    left: 174px;
                     margin: 0;
                 }
             }
@@ -4211,6 +4349,9 @@ Settings
     .feed-form {
         border-radius: 0 0 8px 8px;
         border-top: none;
+        @media (max-width: 528px) {
+            border-radius: 0;
+        }
         li {
             clear: both;
             position: relative;
@@ -4363,33 +4504,6 @@ Settings
 }
 table.small td {
     font-size: 13px;
-}
-
-.form-table {
-    input {
-        margin: 0;
-    }
-    .action {
-        padding-top: 11px;
-    }
-    [type="url"] {
-        width: 297px;
-    }
-    [type="checkbox"] {
-        margin-top: 10px;
-    }
-    [class*=" button-primary"] {
-        margin-right: 5px;
-    }
-    input.span2 {
-        width: 140px;
-    }
-    td:first-child {
-        padding-left: 0;
-    }
-    td:last-child {
-        padding-right: 0;
-    }
 }
 
 .action-item {
@@ -4593,25 +4707,19 @@ Icons
 Buttons
 ------------------------------------------------------------------------------*/
 .button {
-    -webkit-appearance: none;
+    -webkit-appearance: none !important;
     background: none;
     border: none;
     margin: 0;
     padding: 0;
-    font-size: 14px;
-    font-weight: bold;
-    border: 1px solid transparent;
-    padding: 7px 10px;
-    border-radius: 4px;
+    font-size: 16px;
+    font-weight: normal;
     font-family: $font-stack;
     color: $selected;
-    border-color: $selected;
     text-decoration: none;
-    line-height: 1;
+    line-height: 1.3;
     &:hover {
-        background-color: $selected;
-        color: #FFF;
-        text-decoration: none;
+        text-decoration: underline;
     }
     &[disabled] {
         color: $border-color;
@@ -4621,64 +4729,29 @@ Buttons
     }
 }
 
+.button-cancel {
+    color: #5f5f5f;
+    &:hover {
+        color: #5f5f5f;
+    }
+}
+
+.button-inline {
+    margin-left: 15px;
+}
+
+.button-danger {
+    color: red;
+    &:hover {
+        color: red;
+    }
+}
+
 .button::-moz-focus-inner {
     border: 0;
     padding: 0;
     margin-top:-3px;
     margin-bottom: -3px;
-}
-
-.button-white {
-    color: #FFF;
-    border-color: $selected;
-}
-
-.button-danger {
-    color: red;
-    border-color: red;
-    &:hover {
-        background-color: red;
-    }
-}
-
-.button-text {
-    border-color: transparent;
-}
-
-.button-mini {
-    font-size: 12px;
-    padding: 4px 5px;
-}
-
-.button-link {
-    font-weight: normal;
-    padding: 0 !important;
-    border: none;
-    font-size: 16px;
-    background: transparent;
-    &:hover {
-        background: transparent;
-    }
-    &.button {
-        &:hover {
-            color: $selected;
-        }
-    }
-    &.button-danger {
-        &:hover {
-            color: red;
-        }
-    }
-}
-
-.add-button {
-    color: $selected;
-    position: relative;
-    display: block;
-    margin-bottom: 5px;
-    &:hover {
-        text-decoration: none;
-    }
 }
 
 .tags-form-wrap {
@@ -5033,38 +5106,6 @@ select {
     padding-bottom: 14px;
 }
 
-.billing-promo {
-    background-color: $list-background-color;
-    background-repeat: no-repeat;
-    border: 1px solid $border-color;
-    padding: 10px 10px 10px 35px;
-    font-size: 14px;
-    color: #333;
-    border-radius: 4px;
-    position: relative;
-    &:after {
-        position: absolute;
-        left: 8px;
-        top: 12px;
-        width: 18px;
-        height: 12px;
-        display: block;
-        border: 1px solid #999;
-        border-radius: 2px;
-        content: "";
-    }
-    &:before {
-        position: absolute;
-        left: 9px;
-        top: 14px;
-        width: 16px;
-        height: 3px;
-        display: block;
-        background-color: #999;
-        content: "";
-    }
-}
-
 .ui-helper-hidden-accessible {
     border: 0;
     clip: rect(0 0 0 0);
@@ -5141,50 +5182,6 @@ hr.nospace {
     position: relative;
 }
 
-h3 .inline-subhead {
-    position: absolute;
-    text-align: right;
-    bottom: 0;
-    right: 0;
-    margin: 0;
-    font-weight: normal;
-    small {
-        font-size: 12px;
-        color: #333;
-    }
-}
-
-.stripe-badge {
-    display: block;
-    height: 26px;
-    width: 119px;
-    background: image-url("logo-stripe.svg") 0 0 no-repeat;
-    background-size: 119px 26px;
-}
-
-.payment-promo {
-    background-color: #e9eaeb;
-    padding: 10px 10px 1px 10px;
-    border-radius: 4px;
-    font-size: 14px;
-    p {
-        color: #666;
-        line-height: 1.3;
-    }
-}
-
-.button-form {
-    margin: 0;
-    padding: 0;
-}
-
-.break-word {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    max-width: 530px;
-    display: block;
-}
-
 .half {
     width: 50%;
     float: left;
@@ -5192,38 +5189,6 @@ h3 .inline-subhead {
 
 .float-right {
     float: right;
-}
-
-.collection-edit-wrapper {
-    overflow-y: scroll;
-    min-height: 50px;
-    @media (max-width: 528px) {
-        overflow: visible;
-        min-height: auto;
-        max-height: auto !important;
-    }
-}
-
-.collection-edit-controls {
-    padding: 8px 0;
-    border-top: 1px solid $border-color;
-    @media (max-width: 528px) {
-        padding: 0;
-        border-top: none;
-    }
-}
-
-.bottom-toolbar {
-    @media (max-width: 528px) {
-        padding: 15px 30px;
-        position: fixed;
-        right: 0;
-        left: 0;
-        bottom: 0;
-        background-color: $drawer-background-color;
-        border-top: 1px solid $border-color;
-        z-index: 10000;
-    }
 }
 
 .pull-right {
@@ -5542,9 +5507,6 @@ Fullscreen
     .app-panel {
         border-top: none;
     }
-    .entry-basement {
-        top: $toolbar-height;
-    }
 }
 
 
@@ -5800,10 +5762,6 @@ Media Queries
             display: block;
         }
     }
-    .hide-search.feed-selected .entries,
-    .hide-search.entry-selected .entries {
-        top: 0;
-    }
     .entry-toolbar, .entry-feed-title {
         .entry-feed-title {
             display: none;
@@ -5826,6 +5784,12 @@ Media Queries
             margin: 0;
         }
     }
+    .search-button {
+        display: none !important;
+    }
+    .entry-selected .entries {
+        top: 0;
+    }
 }
 
 @media (max-width:680px) {
@@ -5835,7 +5799,7 @@ Media Queries
 }
 
 @media (max-width: 550px) {
-    .hamburger-menu,
+    .hamburger-menu-wrap,
     .desktop-hide {
         display: block !important;
     }
@@ -5870,16 +5834,18 @@ Media Queries
         }
     }
     .entry-toolbar {
-        .favicon-wrap {
+        .site-info {
             display: none;
-            .full-screen & {
-                display: block;
-            }
         }
     }
+    .search-button {
+        display: block !important;
+    }
     .entries {
+        top: 0;
+        transform: translateY($toolbar-height);
         .hide-search & {
-            top: 0;
+            transform: translateY(0);
         }
     }
     .entry-basement {
@@ -5924,181 +5890,23 @@ Media Queries
     .entries ul li:hover.starred .icon-star {
         display: block !important;
     }
-}
-
-.share-form {
-    @include background-color($list-background-color, $list-background-color-night, $list-background-color-sunset);
-    padding: 17px 20px;
-    border-bottom: 1px solid transparent;
-    @include border-color($border-color, $border-color-night, $border-color-sunset);
-    @include arrow(
-        $x-position: 201px,
-        $y-position: -1px,
-        $arrow-color: $body-background-color,
-        $arrow-color-night: $body-background-color-night,
-        $arrow-color-sunset: $body-background-color-sunset,
-        $shadow-color: $arrow-shadow-color,
-        $shadow-color-night: $arrow-shadow-color-night,
-        $shadow-color-sunset: $arrow-shadow-color-sunset,
-        $origin: right)
-    {
-        z-index: 10;
-        visibility: hidden;
+    .button-app-settings {
+        display: none;
     }
-    .full-screen & {
-        @include arrow(
-            $x-position: 236px,
-            $y-position: -1px,
-            $arrow-color: $body-background-color,
-            $arrow-color-night: $body-background-color-night,
-            $arrow-color-sunset: $body-background-color-sunset,
-            $shadow-color: $arrow-shadow-color,
-            $shadow-color-night: $arrow-shadow-color-night,
-            $shadow-color-sunset: $arrow-shadow-color-sunset,
-            $origin: right);
-    }
-    .entry-basement.open &:after,
-    .entry-basement.open &:before {
-        visibility: visible;
-    }
-    .share-form-inner {
-        max-width: 620px;
-        margin: 0 auto;
-    }
-    h2 {
-        font-size: 16px;
-        @include color($text-header-color, $text-header-color-night, $text-header-color-sunset);
-        font-weight: bold;
-        margin: 0 0 15px 0;
-    }
-    .field-cluster {
-        margin-bottom: 15px;
-        input, textarea {
-            @include background-color($input-background-color, $input-background-color, $input-background-color);
-            @include color($text-header-color, $text-header-color, $text-header-color);
-            width: 100%;
-            max-width: 100%;
-            margin: 0;
-            position: relative;
-            border-radius: 0;
-            border-bottom: none;
-            padding: 10px 10px 8px 10px !important;
-            font-size: 16px;
-            &:focus {
-                @include border-color($border-color, $border-color-night, $border-color-sunset);
-            }
-            &:first-child {
-                border-radius: 4px 4px 0 0;
-            }
-            &:last-child {
-                border-radius: 0 0 4px 4px;
-                border-bottom: 1px solid transparent;
-                @include border-color($border-color, $border-color-night, $border-color-sunset);
-            }
+    .entry-settings {
+        &:before {
+            right: 19px;
         }
-        textarea {
-            resize: none;
+        &:after {
+            right: 20px;
         }
     }
-    .share-controls {
-        overflow: hidden;
-        margin-bottom: 10px;
-        .checkbox, .radio, .control {
-            float: left;
-            margin-left: 15px;
-            font-size: 14px;
-            @include color($text-color-light-night, $text-color-light-night, $text-color-light-night);
-            &:first-child {
-                margin-left: 0
-            }
-            input {
-                margin-top: 2px;
-            }
+    .share-form {
+        &:before {
+            right: 196px;
+        }
+        &:after {
+            right: 197px;
         }
     }
-    .button {
-        padding: 9px 15px;
-        background-color: $selected;
-        color: #fff;
-        &:hover {
-            background-color: #2877c6;
-        }
-    }
-    .button-text {
-        background-color: transparent;
-        color: $selected;
-        &:hover {
-            background-color: transparent;
-            color: #2877c6;
-        }
-    }
-    .button-wrap {
-        overflow: hidden;
-        input, button {
-            float: right;
-        }
-    }
-    .icon-share-email {
-        background: image-url("icon-share-email.svg") 100% 0 no-repeat;
-        background-size: 24px 16px;
-    }
-    .icon-share-evernote {
-        background: image-url("icon-share-evernote.svg") 100% 0 no-repeat;
-        background-size: 20px 25px;
-    }
-    .icon-share-tumblr {
-        background: image-url("icon-share-tumblr.svg") 100% 0 no-repeat;
-        background-size: 14px 24px;
-    }
-    .icon-share-pinboard {
-        background: image-url("icon-share-pinboard.svg") 100% 0 no-repeat;
-        background-size: 25px 25px;
-    }
-    .autocomplete-parent {
-        position: relative;
-        .share-autocomplete {
-            z-index: 2;
-            position: absolute;
-            top: 39px;
-            left: 7px;
-            width: 100%;
-            max-width: 400px;
-            @include background-color($input-background-color, $input-background-color, $input-background-color);
-            border-left: 1px solid transparent;
-            border-right: 1px solid transparent;
-            border-bottom: 1px solid transparent;
-            @include border-color($border-color, $border-color-night, $border-color-sunset);
-        }
-        .autocomplete-suggestion {
-            &:hover, &.autocomplete-selected {
-                background-color: rgba(#000, .1);
-            }
-        }
-    }
-}
-
-.theme-night.full-screen .share-form:before {
-    border-top-color: black;
-}
-.theme-sunset.full-screen .share-form:before {
-    border-top-color: $arrow-shadow-color-sunset;
-}
-.theme-night.full-screen .share-form:after {
-    border-top-color: $body-background-color-night;
-}
-.theme-sunset.full-screen .share-form:after {
-    border-top-color: $body-background-color-sunset;
-}
-
-.theme-night.full-screen .entry-settings:before {
-    border-top-color: black;
-}
-.theme-sunset.full-screen .entry-settings:before {
-    border-top-color: $arrow-shadow-color-sunset;
-}
-.theme-night.full-screen .entry-settings:after {
-    border-top-color: $body-background-color-night;
-}
-.theme-sunset.full-screen .entry-settings:after {
-    border-top-color: $body-background-color-sunset;
 }
