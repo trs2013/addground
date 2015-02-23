@@ -8,7 +8,6 @@ class User < ActiveRecord::Base
                  :entry_sort,
                  :previous_read_count,
                  :starred_feed_enabled,
-                 :hide_tagged_feeds,
                  :precache_images,
                  :show_unread_count,
                  :sticky_view_inline,
@@ -232,6 +231,10 @@ class User < ActiveRecord::Base
     end
 
     unique_tags
+  end
+
+  def feed_order
+    feeds.include_user_title.map {|feed| feed.id}
   end
 
   def subscribe!(feed)

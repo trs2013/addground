@@ -23,11 +23,13 @@ class FeedbinUtils
     FEED_ENTRIES_PUBLISHED_KEY % feed_id
   end
 
-  def self.redis_user_entries_published_key(user_id)
-    "user:%d:sorted_entry_ids:published:v2" % user_id
+  def self.redis_user_entries_published_key(user_id, feed_ids)
+    feed_key = feed_ids.sort.join
+    feed_key = Digest::SHA1.hexdigest(feed_key)
+    "user:%d:feed_key:%s:entry_ids:published" % [user_id, feed_key]
   end
-
-  def last_effective_url(url)
+  
+    def last_effective_url(url)
     result = Curl::Easy.http_head(url) do |curl|
       curl.follow_location = true
       curl.ssl_verify_peer = false

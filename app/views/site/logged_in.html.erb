@@ -38,7 +38,7 @@
         <%= render partial: 'shared/buttons/view_all' %>
       </div>
       <div class="feeds">
-        <ul data-behavior="feeds_target">
+        <ul data-behavior="feeds_target droppable">
           <%= render partial: 'feeds/feeds', locals: {collections: @feed_data[:collections], saved_searches: @feed_data[:saved_searches], tags: @feed_data[:tags], feeds: @feed_data[:feeds]} %>
         </ul>
       </div>
@@ -56,7 +56,7 @@
       <div class="search-control hide">
         <div class="sort-control">
           <div class="dropdown-wrap">
-            <span class="sort-order" data-behavior="toggle_share_menu toggle_dropdown">Sort by date</span>
+            <span class="sort-order" data-behavior="toggle_dropdown">Sort by date</span>
             <ul>
               <li data-sort-option="desc"><span>Sort by date</span></li>
               <li data-sort-option="relevance"><span>Sort by relevance</span></li>

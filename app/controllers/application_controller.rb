@@ -95,12 +95,8 @@ class ApplicationController < ActionController::Base
     @mark_selected = true
     @user = current_user
 
-    if @user.setting_on?(:hide_tagged_feeds)
-      excluded_feeds = @user.taggings.pluck(:feed_id).uniq
-      @feeds = @user.feeds.where.not(id: excluded_feeds).include_user_title
-    else
-      @feeds = @user.feeds.include_user_title
-    end
+    excluded_feeds = @user.taggings.pluck(:feed_id).uniq
+    @feeds = @user.feeds.where.not(id: excluded_feeds).include_user_title
 
     @count_data = {
       unread_entries: @user.unread_entries.pluck('feed_id, entry_id'),
@@ -114,7 +110,8 @@ class ApplicationController < ActionController::Base
       collections: get_collections,
       tags: @user.tag_group,
       saved_searches: @user.saved_searches.order("lower(name)"),
-      count_data: @count_data
+      count_data: @count_data,
+      feed_order: @user.feed_order
     }
   end
 
@@ -126,24 +123,17 @@ class ApplicationController < ActionController::Base
 
   def feeds_response
     if 'view_all' == @user.get_view_mode
-      # Get all entries 100 at a time, then get unread info
-      @entries = Entry.where(feed_id: @feed_ids).page(params[:page]).includes(:feed).sort_preference('DESC').entries_list
+      entry_id_cache = EntryIdCache.new(@user.id, @feed_ids, params[:page])
+      @entries = entry_id_cache.entries
+      @page_query = entry_id_cache.page_query
     elsif 'view_starred' == @user.get_view_mode
-      # Get starred info, then get entries
       starred_entries = @user.starred_entries.select(:entry_id).where(feed_id: @feed_ids).page(params[:page]).order("published DESC")
       @entries = Entry.entries_with_feed(starred_entries, 'DESC').entries_list
+      @page_query = starred_entries
     else
-      # Get unread info, then get entries
       @all_unread = 'true'
       unread_entries = @user.unread_entries.select(:entry_id).where(feed_id: @feed_ids).page(params[:page]).sort_preference(@user.entry_sort)
       @entries = Entry.entries_with_feed(unread_entries, @user.entry_sort).entries_list
-    end
-
-    if 'view_all' == @user.get_view_mode
-      @page_query = @entries
-    elsif 'view_starred' == @user.get_view_mode
-      @page_query = starred_entries
-    else
       @page_query = unread_entries
     end
   end

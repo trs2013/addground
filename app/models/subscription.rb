@@ -10,9 +10,6 @@ class Subscription < ActiveRecord::Base
   before_create :expire_stat_cache
   before_destroy :expire_stat_cache
 
-  before_create :expire_entry_cache
-  before_destroy :expire_entry_cache
-
   after_create :add_feed_to_action
   before_destroy :remove_feed_from_action
 
@@ -56,10 +53,6 @@ class Subscription < ActiveRecord::Base
 
   def expire_stat_cache
     Rails.cache.delete("#{self.user_id}:entry_counts")
-  end
-
-  def expire_entry_cache
-    $redis.del(FeedbinUtils.redis_user_entries_published_key(self.user_id))
   end
 
   def update_favicon_hash

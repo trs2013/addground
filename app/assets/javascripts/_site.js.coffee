@@ -288,6 +288,15 @@ $.extend feedbin,
   sortByName: (a, b) ->
     $(a).data('sort-name').localeCompare($(b).data('sort-name'))
 
+  sortByFeedOrder: (a, b) ->
+    a = parseInt($(a).data('sort-id'))
+    b = parseInt($(b).data('sort-id'))
+
+    a = feedbin.data.feed_order.indexOf(a)
+    b = feedbin.data.feed_order.indexOf(b)
+
+    a - b
+
   showSearchControls: (sort) ->
     $('.search-control').removeClass('hide');
     text = null
@@ -393,7 +402,8 @@ $.extend feedbin,
     top = $('.entry-toolbar').outerHeight()
     $('.entry-basement').removeClass('open')
     $('.entry-content').css
-      transform: "translateY(0)"
+      "transform": "translateY(0)"
+      "padding-bottom": 0
 
   openEntryBasement: (selectedPanel) ->
     feedbin.openEntryBasementTimeount = setTimeout ( ->
@@ -410,7 +420,8 @@ $.extend feedbin,
     $('.entry-basement').addClass('open')
     newTop = selectedPanel.height()
     $('.entry-content').css
-      transform: "translateY(#{newTop}px)"
+      "transform": "translateY(#{newTop}px)"
+      "padding-bottom": "#{newTop}px"
 
   applyStarred: (entryId) ->
     if feedbin.Counts.get().isStarred(entryId)
@@ -420,6 +431,65 @@ $.extend feedbin,
     entry = feedbin.entries[entryId]
     feedbin.updateEntryContent(entry.content)
     feedbin.formatEntryContent(entryId, true)
+
+  draggable: ->
+    $('[data-behavior~=draggable]').draggable
+      containment: '.feeds'
+      helper: 'clone'
+      appendTo: '[data-behavior~=feeds_target]'
+      scrollSpeed: 40
+      start: (event, ui) ->
+        feedbin.dragOwner = $(@).parents('[data-behavior~=droppable]').first()
+
+  tagFeed: (url, tag) ->
+    $.ajax
+      type: "POST",
+      url: url,
+      data: { _method: "patch", feed: {tag_list: tag}, no_response: true }
+
+  hideEmptyTags: ->
+    $('[data-tag-id]').each ->
+      if $(@).find('ul li').length == 0
+        $(@).remove()
+
+  appendTag: (target, ui) ->
+    appendTarget = if target.is('[data-behavior~=feeds_target]') then target else $(".drawer ul", target)
+    ui.helper.remove()
+    ui.draggable.appendTo(appendTarget)
+    $('> [data-behavior~=sort_feed]', appendTarget).sort(feedbin.sortByFeedOrder).remove().appendTo(appendTarget)
+
+  droppable: ->
+    $('[data-behavior~=droppable]:not(.ui-droppable)').droppable
+      hoverClass: ->
+        if $(@).is('[data-behavior~=feeds_target]')
+          ''
+        else
+          'selected'
+      greedy: true
+      drop: (event, ui) ->
+        if !feedbin.dragOwner.get(0).isEqualNode(event.target)
+
+          feedId = parseInt(ui.draggable.data('feed-id'))
+          url = ui.draggable.data('feed-path')
+          target = $(event.target)
+          tag = $("> a", event.target).find(".rename-feed-input").val()
+
+          if tag?
+            tagId = $(event.target).data('tag-id')
+          else
+            tag = ""
+            tagId = null
+
+          feedbin.Counts.get().updateTagMap(feedId, tagId)
+          feedbin.tagFeed(url, tag)
+          feedbin.appendTag(target, ui)
+          feedbin.hideEmptyTags()
+          feedbin.applyCounts(false)
+          feedbin.dragOwner = null
+          setTimeout ( ->
+            feedbin.draggable()
+          ), 20
+
 
   entries: {}
 
@@ -440,6 +510,8 @@ $.extend feedbin,
   recentlyReadTimer: null
 
   selectedFeed: null
+
+  dragOwner: null
 
 $.extend feedbin,
   init:
@@ -463,6 +535,10 @@ $.extend feedbin,
         title = field.data('original')
         field.val(title)
         field.addClass('disabled')
+
+      $(document).on 'click', '[data-behavior~=open_item]', (event) ->
+        $('.rename-feed-input').each ->
+          $(@).blur()
 
       $(document).on 'submit', '.edit_feed', (event, xhr) ->
         field = $(@).find('.rename-feed-input')
@@ -678,7 +754,7 @@ $.extend feedbin,
       $(document).on 'click', '[data-behavior~=share_options] a', (event) ->
         $('.dropdown-wrap').removeClass('open')
 
-      $(document).on 'click', '[data-behavior~=toggle_share_menu]', (event) ->
+      $(document).on 'click', '[data-behavior~=toggle_dropdown]', (event) ->
         $(".dropdown-wrap li").removeClass('selected')
         parent = $(@).closest('.dropdown-wrap')
         if parent.hasClass('open')
@@ -965,8 +1041,6 @@ $.extend feedbin,
     hideUpdates: ->
       $(document).on 'click', '[data-behavior~=hide_updates]', (event) ->
         container = $(@).parents('.diff-wrap')
-        console.log 'hideUpdates', event
-        console.log 'feedbin.data.update_message_seen', feedbin.data.update_message_seen
         if feedbin.data.update_message_seen
           container.addClass('hide')
         else
@@ -1216,6 +1290,10 @@ $.extend feedbin,
 
         $('.share-form .type-text').text(typeText)
         $('.share-form .description-placeholder').attr('placeholder', description)
+
+    dragAndDrop: ->
+      feedbin.droppable()
+      feedbin.draggable()
 
 
 jQuery ->
