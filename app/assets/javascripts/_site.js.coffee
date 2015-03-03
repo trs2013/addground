@@ -155,7 +155,7 @@ $.extend feedbin,
       if actualSrc?
         $(@).attr("src", actualSrc)
 
-      if $(@).is("[src*='feeds.feedburner.com'], [data-canonical-src*='feeds.feedburner.com']")
+      if $(@).is("[data-canonical-src*='feeds.feedburner.com']")
         $(@).addClass('hide')
 
   formatEntryContent: (entryId, resetScroll=true, readability=true) ->

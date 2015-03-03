@@ -8,7 +8,12 @@ class ContentFormatter
     context = {
       whitelist: whitelist
     }
-    filters = [HTML::Pipeline::LazyLoadFilter, HTML::Pipeline::SanitizationFilter]
+
+    filters = [
+      HTML::Pipeline::LazyLoadFilter,
+      HTML::Pipeline::SanitizationFilter,
+      HTML::Pipeline::CanonicalSourceFilter
+    ]
 
     if ENV['CAMO_HOST'] && ENV['CAMO_KEY'] && image_proxy_enabled
       context[:asset_proxy] = ENV['CAMO_HOST']
@@ -19,7 +24,7 @@ class ContentFormatter
     if entry
       filters.unshift(HTML::Pipeline::AbsoluteSourceFilter)
       filters.unshift(HTML::Pipeline::AbsoluteHrefFilter)
-      # filters.push(HTML::Pipeline::ImagePlaceholderFilter)
+      filters.push(HTML::Pipeline::ImagePlaceholderFilter)
       context[:image_base_url] = context[:href_base_url] = entry.feed.site_url
       context[:image_subpage_url] = context[:href_subpage_url] = entry.url || ""
       context[:placeholder_url] = self.placeholder_url
