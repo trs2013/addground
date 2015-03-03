@@ -19,7 +19,7 @@ class EntryPresenter < BasePresenter
 
   def published_date
     if entry.published
-      entry.published.to_s(:feed)
+      entry.published.to_s(:full_human)
     else
       ''
     end
@@ -42,37 +42,10 @@ class EntryPresenter < BasePresenter
     end
   end
 
-  def abbr_time
-    seconds_since_published = Time.now.utc - entry.published
-    if seconds_since_published > 86400
-      if Time.now.strftime("%Y") != entry.published.strftime("%Y")
-        format = 'day_year'
-      else
-        format = 'day'
-      end
-      string = entry.published.to_s(:datetime)
-    elsif seconds_since_published < 0
-      format = 'none'
-      string = "the future"
-    elsif seconds_since_published < 60
-      format = 'none'
-      string = "now"
-    elsif seconds_since_published < 3600
-      format = 'none'
-      string = (seconds_since_published / 60).round
-      string = "#{string}m"
-    else
-      format = 'none'
-      string = (seconds_since_published / 60 / 60).round
-      string = "#{string}h"
-    end
-    @template.time_tag(entry.published, string, class: 'time', data: {format: format})
-  end
-
   def content(image_proxy_enabled)
     @content ||= ContentFormatter.format!(entry.content, entry, image_proxy_enabled)
   rescue HTML::Pipeline::Filter::InvalidDocumentException
-    @template.content_tag(:p, "No content", class: "entry-callout")
+    @template.content_tag(:p, '&ndash;&ndash;'.html_safe)
   end
 
   def has_content?
@@ -85,7 +58,15 @@ class EntryPresenter < BasePresenter
       text = entry.summary.html_safe
     end
     if text.blank?
-      text = '&hellip;'.html_safe
+      text = '&ndash;&ndash;'.html_safe
+    end
+    text
+  end
+
+  def entry_view_title
+    text = sanitized_title
+    if text.blank?
+      text = @template.content_tag(:span, '&ndash;&ndash;'.html_safe, title: "No title").html_safe
     end
     text
   end
