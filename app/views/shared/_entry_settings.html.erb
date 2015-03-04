@@ -26,6 +26,11 @@
       <%= svg_tag 'icon-full-screen-close', size: '34x26' %>
     </div>
   </div>
+  <div class="setting-wrap mobile-hide">
+    <div class="button-gallery-view" data-behavior="gallery_view" title="Toggle gallery view">
+      <%= svg_tag 'icon-gallery', size: '32x24' %>
+    </div>
+  </div>
   <div class="setting-wrap theme-settings">
     <%= link_to settings_theme_path(theme: 'day'), remote: true, method: :post, class: 'theme-button theme-button-day', title: 'Switch to day theme', data: {behavior: 'switch_theme', theme: 'day'} do %>
       <span class="theme-button-inner"></span>

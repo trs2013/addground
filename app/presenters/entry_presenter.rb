@@ -75,10 +75,10 @@ class EntryPresenter < BasePresenter
     @sanitized_title ||= @template.raw(@template.strip_tags(entry.title))
   end
 
-  def author
+  def author(prepend = "by ")
     if entry.author
       clean_author = @template.strip_tags(entry.author)
-      clean_author = "by " + @template.content_tag(:span, clean_author, class: "author")
+      clean_author = prepend + @template.content_tag(:span, clean_author, class: "author")
     else
       clean_author = ''
     end

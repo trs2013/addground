@@ -26,6 +26,9 @@
               <time datetime="<%= entry_presenter.datetime %>"><%= entry_presenter.published_date %></time>
               <%= entry_presenter.author %>
             </p>
+            <p class="post-meta separate-author">
+              <%= entry_presenter.author('') %>
+            </p>
             <p class="post-meta feed-title"><span data-behavior="user_title" data-feed-id="<%= entry.feed.id %>"><%= strip_tags(entry.feed.title) %></span></p>
           </header>
           <div data-behavior="entry_content_wrap" class="content-styles">
@@ -48,6 +51,16 @@
             <% end %>
             <%= raw(entry_presenter.content(!user.setting_on?(:disable_image_proxy))) %>
           </div>
+		  <div class="gallery-wrap">
+			<div class="gallery-inner">
+			  <img src="http://www.seriouseats.com/images/2015/02/20150220-oysters-stout-mike-reis.jpg">
+			</div>
+		  	<div class="gallery-controls">
+		  		<div class="gallery-nav gallery-previous"></div>
+		  		<div class="gallery-nav gallery-count"></div>
+		  		<div class="gallery-nav gallery-next"></div>
+		  	</div>
+		  </div>
         </div>
         <a class="next-entry-preview no-content" data-behavior="open_next_entry" href="#">
           <span class="next-entry-preview-inner">

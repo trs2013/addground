@@ -246,6 +246,10 @@ $.extend feedbin,
   isFullScreen: ->
     $('body').hasClass('full-screen')
 
+  toggleGalleryView: ->
+    feedbin.toggleFullScreen()
+    $('body').toggleClass('gallery-view')
+
   nextEntry: ->
     nextEntry = $('.entries').find('.selected').next()
     if nextEntry.length
@@ -426,7 +430,12 @@ $.extend feedbin,
     newTop = selectedPanel.height()
     $('.entry-content').css
       "transform": "translateY(#{newTop}px)"
-      "padding-bottom": "#{newTop}px"
+
+    setTimeout ( ->
+      $('.entry-content').css
+        "padding-bottom": "#{newTop}px"
+    ), 200
+
 
   applyStarred: (entryId) ->
     if feedbin.Counts.get().isStarred(entryId)
@@ -973,6 +982,20 @@ $.extend feedbin,
     fullscreen: ->
       $(document).on 'click', '[data-behavior~=full_screen]', (event) ->
         feedbin.toggleFullScreen()
+        feedbin.closeEntryBasement()
+        event.preventDefault()
+        return
+
+    closeFullscreen: ->
+      $(document).on 'click', '[data-behavior~=close_full_screen]', (event) ->
+        feedbin.toggleGalleryView()
+        feedbin.closeEntryBasement()
+        event.preventDefault()
+        return
+
+    galleryView: ->
+      $(document).on 'click', '[data-behavior~=gallery_view]', (event) ->
+        feedbin.toggleGalleryView()
         feedbin.closeEntryBasement()
         event.preventDefault()
         return
