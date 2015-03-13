@@ -2,6 +2,7 @@ require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
 require_relative '../lib/basic_authentication'
+require_relative '../lib/cookie_filter'
 
 # Assets should be precompiled for production (so we don't need the gems loaded then)
 Bundler.require(*Rails.groups(assets: %w(development test)))
@@ -41,6 +42,8 @@ module Feedbin
     config.middleware.use Rack::ContentLength
 
     config.middleware.use BasicAuthentication
+
+    config.middleware.insert_before ::ActionDispatch::Cookies, ::CookieFilter
 
     config.exceptions_app = self.routes
 
