@@ -92,6 +92,15 @@ class SupportedSharingService < ActiveRecord::Base
       requires_auth: false,
       service_type: 'popover',
       klass: 'Buffer'
+    },
+    {
+      service_id: 'medium',
+      label: 'Medium',
+      requires_auth: true,
+      service_type: 'oauth2_pocket',
+      html_options: {data: {behavior: 'show_entry_basement', basement_panel: 'medium_share_panel'}},
+      klass: 'Medium',
+      has_share_sheet: true
     }
   ].freeze
 

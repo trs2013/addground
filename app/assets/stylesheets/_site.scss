@@ -1190,7 +1190,11 @@ th {
         background-size: 21px 21px;
         @include share-icon(1, 2);
     }
-
+    .icon-share-medium {
+        background-image: image-url("icon-share-medium.svg");
+        background-size: 23px 19px;
+        @include share-icon(0, 2);
+    }
 }
 
 .inset {
