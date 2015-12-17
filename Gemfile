@@ -5,9 +5,12 @@ gem 'rails'
 gem 'rest-client', '= 1.6.7'
 
 group :development do
+  gem 'capistrano'
+  gem 'capistrano-bundler'
+  gem 'capistrano-rbenv'
+  gem 'capistrano-rails'
   gem 'better_errors'
   gem 'quiet_assets'
-  gem 'capistrano', github: 'capistrano/capistrano', ref: 'dcd3257'
   gem 'silencer'
   gem 'spring'
   gem 'benchmark-ips'
