@@ -14,9 +14,14 @@ class EntryDeleter
     entry_count = Entry.where(feed_id: feed_id).count
     if entry_count > entry_limit
       entries_to_keep = Entry.where(feed_id: feed_id).order('published DESC').limit(entry_limit).pluck('entries.id')
-      entries_to_delete = Entry.select(:id, :public_id).where(feed_id: feed_id, starred_entries_count: 0).where.not(id: entries_to_keep)
+      entries_to_delete = Entry.select(:id, :public_id, :image).where(feed_id: feed_id, starred_entries_count: 0).where.not(id: entries_to_keep)
       entries_to_delete_ids = entries_to_delete.map {|entry| entry.id }
       entries_to_delete_public_ids = entries_to_delete.map {|entry| entry.public_id }
+      entries_to_delete_images = entries_to_delete.map do |entry|
+        if entry.image && entry.image["processed_url"]
+          URI(entry.image["processed_url"]).path[1..-1]
+        end
+      end.compact
 
       # Delete records
       UnreadEntry.where(entry_id: entries_to_delete_ids).delete_all
@@ -39,6 +44,10 @@ class EntryDeleter
         SearchIndexRemove.perform_async(entries_to_delete_ids)
         $redis.zrem(key_created_at, entries_to_delete_ids)
         $redis.zrem(key_published, entries_to_delete_ids)
+      end
+
+      if entries_to_delete_images.present?
+        ImageDeleter.perform_async(entries_to_delete_images)
       end
 
       Librato.increment('entry.destroy', by: entries_to_delete_ids.count)
