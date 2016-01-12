@@ -6,7 +6,7 @@ class ProcessedImage
   DETECTOR = OpenCV::CvHaarClassifierCascade::load("#{Rails.root}/lib/assets/haarcascade_frontalface_alt.xml")
   TARGET_WIDTH = 542.to_f
 
-  attr_reader :url, :width, :height
+  attr_reader :url, :width, :height, :original_width, :original_height
 
   def initialize(file)
     @file = file

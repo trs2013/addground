@@ -51,10 +51,16 @@ class DownloadImage
 
   def to_h
     {
-      original_url: self.url.to_s,
-      processed_url: self.image.url.to_s,
-      width: self.image.width,
-      height: self.image.height,
+      original: {
+        url: self.url.to_s,
+        width: self.image.original_width.to_i,
+        height: self.image.original_height.to_i,
+      },
+      cropped_1: {
+        url: self.image.url.to_s,
+        width: self.image.width.to_i,
+        height: self.image.height.to_i,
+      }
     }
   end
 
